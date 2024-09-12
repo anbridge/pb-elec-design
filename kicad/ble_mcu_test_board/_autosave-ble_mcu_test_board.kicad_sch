@@ -448,6 +448,114 @@
 				)
 			)
 		)
+		(symbol "Device:Antenna"
+			(pin_numbers hide)
+			(pin_names
+				(offset 1.016) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "AE"
+				(at -1.905 1.905 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify right)
+				)
+			)
+			(property "Value" "Antenna"
+				(at -1.905 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify right)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Antenna"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "antenna"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Antenna_0_1"
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0 -3.81)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 2.54) (xy 0 -2.54) (xy -1.27 2.54)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "Antenna_1_1"
+				(pin input line
+					(at 0 -5.08 90)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "Device:C"
 			(pin_numbers hide)
 			(pin_names
@@ -2461,6 +2569,16 @@
 	)
 	(wire
 		(pts
+			(xy 233.68 46.99) (xy 233.68 44.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "07a02747-a6e6-4885-9e59-facd77ef784b")
+	)
+	(wire
+		(pts
 			(xy 36.83 82.55) (xy 43.18 82.55)
 		)
 		(stroke
@@ -2791,6 +2909,26 @@
 	)
 	(wire
 		(pts
+			(xy 229.87 46.99) (xy 233.68 46.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8494e746-8b95-4803-9e3a-b49a7f3dc95d")
+	)
+	(wire
+		(pts
+			(xy 173.99 29.21) (xy 179.07 29.21)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8bca96a4-ef24-4672-bd49-0e4a7fb2b8af")
+	)
+	(wire
+		(pts
 			(xy 121.92 52.07) (xy 125.73 52.07)
 		)
 		(stroke
@@ -2818,6 +2956,16 @@
 			(type default)
 		)
 		(uuid "8e7c7e9a-3fab-445b-a84d-f2b9b9c151b6")
+	)
+	(wire
+		(pts
+			(xy 233.68 49.53) (xy 233.68 53.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9b3d7575-8472-4f9e-9f4d-5626b2b9bf82")
 	)
 	(wire
 		(pts
@@ -3068,6 +3216,36 @@
 			(type default)
 		)
 		(uuid "d88ecc8c-3319-42f7-87e7-a10c144fe870")
+	)
+	(wire
+		(pts
+			(xy 173.99 46.99) (xy 173.99 29.21)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e027dda4-f899-4e19-8b08-c84ec90ff87f")
+	)
+	(wire
+		(pts
+			(xy 229.87 49.53) (xy 233.68 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e1079e63-ddb1-4206-84bd-fa178d575ed8")
+	)
+	(wire
+		(pts
+			(xy 179.07 29.21) (xy 179.07 30.48)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e49fd64a-1a08-46ec-8106-9183c160816c")
 	)
 	(wire
 		(pts
@@ -4036,6 +4214,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:Antenna")
+		(at 233.68 39.37 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "49bc56df-c3a4-42a9-aac9-113b30af096b")
+		(property "Reference" "AE1"
+			(at 236.22 38.7349 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Antenna"
+			(at 236.22 41.2749 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 233.68 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 233.68 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Antenna"
+			(at 233.68 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "929e770b-4c31-490d-b7eb-8f0a0629bd0f")
+		)
+		(instances
+			(project ""
+				(path "/c917c4ba-2d94-48b9-af44-f4efc4d9932d"
+					(reference "AE1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 82.55 39.37 0)
 		(unit 1)
@@ -4381,16 +4626,16 @@
 	)
 	(symbol
 		(lib_id "2GHz45_RF_FLT:DLF162500LT-5028A1")
-		(at 167.64 58.42 0)
+		(at 173.99 49.53 0)
+		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "6d380c49-95d9-4a1e-a981-b938a7a641c4")
 		(property "Reference" "U2"
-			(at 195.58 48.26 0)
+			(at 201.93 59.69 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -4398,7 +4643,7 @@
 			)
 		)
 		(property "Value" "DLF162500LT-5028A1"
-			(at 195.58 50.8 0)
+			(at 201.93 57.15 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -4406,7 +4651,7 @@
 			)
 		)
 		(property "Footprint" "DLF-4_1P6X0P8"
-			(at 167.64 58.42 0)
+			(at 173.99 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4416,7 +4661,7 @@
 			)
 		)
 		(property "Datasheet" "DLF162500LT-5028A1"
-			(at 167.64 58.42 0)
+			(at 173.99 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4426,7 +4671,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 167.64 58.42 0)
+			(at 173.99 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4589,6 +4834,72 @@
 			(project "ble_mcu_test_board"
 				(path "/c917c4ba-2d94-48b9-af44-f4efc4d9932d"
 					(reference "C2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 179.07 30.48 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "8446eaae-4c20-4799-a2f8-4280e9c1b6f6")
+		(property "Reference" "#PWR013"
+			(at 179.07 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 179.07 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 179.07 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 179.07 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 179.07 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ad18d9b6-1ffb-417e-ba42-b55a1a7cef53")
+		)
+		(instances
+			(project ""
+				(path "/c917c4ba-2d94-48b9-af44-f4efc4d9932d"
+					(reference "#PWR013")
 					(unit 1)
 				)
 			)
@@ -5495,6 +5806,72 @@
 			(project ""
 				(path "/c917c4ba-2d94-48b9-af44-f4efc4d9932d"
 					(reference "#PWR010")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 233.68 53.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e077acc2-b639-43e0-89a6-7df6773fce7a")
+		(property "Reference" "#PWR014"
+			(at 233.68 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 233.68 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 233.68 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 233.68 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 233.68 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "36316d83-8611-4682-b093-25e52dd05208")
+		)
+		(instances
+			(project "ble_mcu_test_board"
+				(path "/c917c4ba-2d94-48b9-af44-f4efc4d9932d"
+					(reference "#PWR014")
 					(unit 1)
 				)
 			)

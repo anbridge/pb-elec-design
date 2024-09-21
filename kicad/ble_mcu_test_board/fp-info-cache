@@ -1,4 +1,4 @@
-23762431984600242
+23767611718684496
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -96634,3 +96634,24 @@ DLF162500LT-5028A1
 0
 4
 4
+external_footprints
+PW24_TEX
+
+TCA9548APWR 
+0
+24
+24
+external_footprints
+PW24_TEX-L
+
+TCA9548APWR 
+0
+24
+24
+external_footprints
+PW24_TEX-M
+
+TCA9548APWR 
+0
+24
+24

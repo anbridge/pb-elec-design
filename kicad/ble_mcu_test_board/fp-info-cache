@@ -1,4 +1,4 @@
-23767611718684496
+23771066042265413
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -96655,3 +96655,17 @@ TCA9548APWR
 0
 24
 24
+external_footprints
+SW_SSSS811101
+
+
+0
+7
+7
+pcb_antenna
+meander_antenna_stm32wb10cc
+
+
+0
+1
+1

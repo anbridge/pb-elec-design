@@ -6,8 +6,8 @@
 	(paper "A4")
 	(title_block
 		(title "Bluetooth MCU Prototype")
-		(date "2024-09-18")
-		(rev "1")
+		(date "2024-09-24")
+		(rev "2")
 		(company "FL24C6 / Posture Best")
 		(comment 1 "Anson Bridges")
 	)
@@ -5653,10 +5653,6 @@
 		(uuid "aa6eb3fa-acfb-4503-85d9-a51610de5071")
 	)
 	(no_connect
-		(at 240.03 95.25)
-		(uuid "b00541c7-8728-45c3-a25b-63900765a6df")
-	)
-	(no_connect
 		(at 138.43 77.47)
 		(uuid "b953875b-816a-418a-ba06-d30c024ba72c")
 	)
@@ -5683,10 +5679,6 @@
 	(no_connect
 		(at 87.63 105.41)
 		(uuid "f584f64e-c1df-4435-bdb2-1d7c51429480")
-	)
-	(no_connect
-		(at 240.03 92.71)
-		(uuid "fa02dbbb-fe9b-49c1-8b90-8f2c1e3c71f8")
 	)
 	(no_connect
 		(at 87.63 107.95)
@@ -5841,6 +5833,26 @@
 			(type default)
 		)
 		(uuid "0ebe8d40-1f6e-4c79-9794-5659774a94e6")
+	)
+	(wire
+		(pts
+			(xy 138.43 100.33) (xy 142.24 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0ed4760f-74a8-4858-abff-f2f8ca231b89")
+	)
+	(wire
+		(pts
+			(xy 234.95 83.82) (xy 234.95 85.09)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0f97c9ab-e323-4a8b-bf72-3bac38f224e3")
 	)
 	(wire
 		(pts
@@ -6444,6 +6456,16 @@
 	)
 	(wire
 		(pts
+			(xy 143.51 100.33) (xy 146.05 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "726ec3a3-b1f7-42ce-8e2d-8b4a30bab9cd")
+	)
+	(wire
+		(pts
 			(xy 24.13 175.26) (xy 36.83 175.26)
 		)
 		(stroke
@@ -6514,6 +6536,16 @@
 	)
 	(wire
 		(pts
+			(xy 143.51 101.6) (xy 143.51 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7f4488d6-2433-4f51-9756-026dffe0c2ca")
+	)
+	(wire
+		(pts
 			(xy 19.05 154.94) (xy 36.83 154.94)
 		)
 		(stroke
@@ -6554,6 +6586,16 @@
 	)
 	(wire
 		(pts
+			(xy 142.24 100.33) (xy 142.24 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "872a83d4-3faf-46d1-a9b6-d14b608bf7c4")
+	)
+	(wire
+		(pts
 			(xy 57.15 130.81) (xy 60.96 130.81)
 		)
 		(stroke
@@ -6571,6 +6613,16 @@
 			(type default)
 		)
 		(uuid "8bca96a4-ef24-4672-bd49-0e4a7fb2b8af")
+	)
+	(wire
+		(pts
+			(xy 138.43 102.87) (xy 140.97 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8c2378ed-0837-448c-9b61-c1f3d5bcc941")
 	)
 	(wire
 		(pts
@@ -6734,6 +6786,16 @@
 	)
 	(wire
 		(pts
+			(xy 142.24 102.87) (xy 146.05 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9c3ea174-4a76-4426-b549-5cec53e1c8a5")
+	)
+	(wire
+		(pts
 			(xy 113.03 24.13) (xy 113.03 62.23)
 		)
 		(stroke
@@ -6761,16 +6823,6 @@
 			(type default)
 		)
 		(uuid "9d8ede32-7dac-4824-83de-27fd3b5f7b73")
-	)
-	(wire
-		(pts
-			(xy 138.43 102.87) (xy 146.05 102.87)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a02f7e26-30db-4d62-8b21-29ac02d2bcb1")
 	)
 	(wire
 		(pts
@@ -6861,16 +6913,6 @@
 			(type default)
 		)
 		(uuid "af88cf14-2bf1-4afb-8c75-95b800a3c9d8")
-	)
-	(wire
-		(pts
-			(xy 138.43 100.33) (xy 146.05 100.33)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b066e133-87c3-4ecf-aa1b-2767dd879104")
 	)
 	(wire
 		(pts
@@ -7104,6 +7146,16 @@
 	)
 	(wire
 		(pts
+			(xy 140.97 102.87) (xy 140.97 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cf67929c-3dfc-4b33-b1c0-95f27312abd2")
+	)
+	(wire
+		(pts
 			(xy 129.54 40.64) (xy 135.89 40.64)
 		)
 		(stroke
@@ -7254,6 +7306,16 @@
 	)
 	(wire
 		(pts
+			(xy 240.03 83.82) (xy 234.95 83.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e3472e62-6215-4ec5-b265-794293357498")
+	)
+	(wire
+		(pts
 			(xy 212.09 22.86) (xy 212.09 24.13)
 		)
 		(stroke
@@ -7301,6 +7363,16 @@
 			(type default)
 		)
 		(uuid "e8077622-86e5-467d-87a7-e5816a778a34")
+	)
+	(wire
+		(pts
+			(xy 240.03 85.09) (xy 240.03 83.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e899ca20-1fd0-4963-bf79-a020749e69af")
 	)
 	(wire
 		(pts
@@ -7441,6 +7513,16 @@
 			(type default)
 		)
 		(uuid "f9fe4e72-7ae9-4c50-adb6-8359ea1e8e02")
+	)
+	(wire
+		(pts
+			(xy 140.97 101.6) (xy 143.51 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fa25b839-4faf-4cb2-97b4-e57199014e7b")
 	)
 	(wire
 		(pts
@@ -7661,6 +7743,19 @@
 			)
 		)
 		(uuid "c2aa9877-97c3-4e8c-93a7-e36b8d0be76b")
+	)
+	(text "Posture Best \nPrototype Mo-bo"
+		(exclude_from_sim no)
+		(at 88.9 183.134 0)
+		(effects
+			(font
+				(size 6.35 6.35)
+				(thickness 1.27)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "c4a661f9-25bb-46b4-9b5b-071c995a9d2d")
 	)
 	(text "BOOT MODE"
 		(exclude_from_sim no)
@@ -8464,7 +8559,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 18.542 111.76 90)
 			(effects
 				(font
@@ -9544,7 +9639,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "pcb_antenna:meander_antenna_stm32wb10cc"
 			(at 266.7 33.02 0)
 			(effects
 				(font
@@ -10974,7 +11069,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 224.79 142.748 90)
 			(effects
 				(font
@@ -11041,7 +11136,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Crystal:Crystal_SMD_2016-4Pin_2.0x1.6mm"
 			(at 46.99 74.93 0)
 			(effects
 				(font
@@ -11181,7 +11276,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_SPDT_PCM12"
+		(property "Footprint" "external_footprints:SW_SSSS811101"
 			(at 233.68 140.97 0)
 			(effects
 				(font
@@ -11244,7 +11339,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1k5"
+		(property "Value" "4k7"
 			(at 74.676 108.204 0)
 			(effects
 				(font
@@ -11253,7 +11348,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 78.232 106.68 90)
 			(effects
 				(font
@@ -12138,6 +12233,75 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 240.03 99.06 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "ae1f4d47-3176-440d-8c49-0d3ff9df7108")
+		(property "Reference" "R5"
+			(at 241.808 101.092 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "5k1"
+			(at 235.204 100.838 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 238.252 99.06 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 240.03 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 240.03 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1970a464-c25b-488e-aec6-535ab581772d")
+		)
+		(pin "2"
+			(uuid "02311a88-1879-4dd5-9b98-3774cb813591")
+		)
+		(instances
+			(project ""
+				(path "/c917c4ba-2d94-48b9-af44-f4efc4d9932d"
+					(reference "R5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 189.23 57.15 0)
 		(unit 1)
@@ -12221,7 +12385,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1k5"
+		(property "Value" "4k7"
 			(at 67.056 107.95 0)
 			(effects
 				(font
@@ -12230,7 +12394,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 70.612 106.68 90)
 			(effects
 				(font
@@ -12682,6 +12846,75 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 240.03 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "ca1dc7de-e69d-4284-b38c-defa110751e6")
+		(property "Reference" "R6"
+			(at 241.3 88.392 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "5k1"
+			(at 234.95 89.662 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 238.252 88.9 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 240.03 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 240.03 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "17b6c59b-ca13-42c8-a24e-b444d4610ba9")
+		)
+		(pin "2"
+			(uuid "5870740e-fde3-49d0-8b83-027ed81ac0a0")
+		)
+		(instances
+			(project "ble_mcu_test_board"
+				(path "/c917c4ba-2d94-48b9-af44-f4efc4d9932d"
+					(reference "R6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:L")
 		(at 190.5 43.18 90)
 		(unit 1)
@@ -12707,7 +12940,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Inductor_SMD:L_0402_1005Metric"
 			(at 190.5 43.18 0)
 			(effects
 				(font
@@ -13176,7 +13409,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-17"
 			(at 251.46 102.87 0)
 			(effects
 				(font
@@ -13294,6 +13527,71 @@
 			(project "ble_mcu_test_board"
 				(path "/c917c4ba-2d94-48b9-af44-f4efc4d9932d"
 					(reference "#PWR014")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 234.95 85.09 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "e113bb4a-6034-477a-b999-8a029fbaf179")
+		(property "Reference" "#PWR049"
+			(at 234.95 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 231.394 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 234.95 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 234.95 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 234.95 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3fde8498-7e41-4d5a-8eda-52428956312d")
+		)
+		(instances
+			(project "ble_mcu_test_board"
+				(path "/c917c4ba-2d94-48b9-af44-f4efc4d9932d"
+					(reference "#PWR049")
 					(unit 1)
 				)
 			)
@@ -13510,6 +13808,71 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 240.03 102.87 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f8d26944-c142-484d-a7fd-a1364feade4e")
+		(property "Reference" "#PWR048"
+			(at 240.03 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 236.474 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 240.03 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 240.03 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 240.03 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a71627c5-be1d-404e-a708-87d4b9747e80")
+		)
+		(instances
+			(project "ble_mcu_test_board"
+				(path "/c917c4ba-2d94-48b9-af44-f4efc4d9932d"
+					(reference "#PWR048")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3.3V")
 		(at 36.83 160.02 90)
 		(unit 1)
@@ -13649,7 +14012,6 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "ff29c06d-3b63-4836-9646-85477340b056")
 		(property "Reference" "U4"
 			(at 43.18 100.33 0)
@@ -13668,12 +14030,13 @@
 			)
 		)
 		(property "Footprint" "external_footprints:PW24_TEX"
-			(at 29.21 110.49 0)
+			(at 20.574 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 					(italic yes)
 				)
+				(hide yes)
 			)
 		)
 		(property "Datasheet" "TCA9548APWR"

@@ -1,0 +1,14 @@
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_pwr.h:827:22:LL_PWR_EnableSRAM2Retention	1
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_exti.h:1151:26:LL_EXTI_IsEnabledRisingTrig_0_31	2
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_exti.h:1338:26:LL_EXTI_IsEnabledFallingTrig_0_31	2
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_exti.h:1401:22:LL_EXTI_GenerateSWI_0_31	1
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_rcc.h:2349:22:LL_RCC_SetClkAfterWakeFromStop	1
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_system.h:840:26:LL_SYSCFG_GetEXTISource	2
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_hsem.h:233:26:LL_HSEM_1StepLock	2
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_hsem.h:247:22:LL_HSEM_ReleaseLock	1
+../Core/Src/standby.c:81:6:STBY_AppHwSave	1
+../Core/Src/standby.c:91:6:STBY_AppHwRestore	1
+../Core/Src/standby.c:114:6:STBY_SysHwSave	1
+../Core/Src/standby.c:125:6:STBY_SysHwRestore	2
+../Core/Src/standby.c:158:10:STBY_BootManager	1
+../Core/Src/standby.c:193:13:STBY_TriggerIT	15

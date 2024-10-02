@@ -1,0 +1,14 @@
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_rcc.h:2883:22:LL_RCC_EnableRTC	1
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_rcc.h:2893:22:LL_RCC_DisableRTC	1
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_bus.h:539:22:LL_AHB2_GRP1_EnableClock	1
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_bus.h:744:22:LL_AHB3_GRP1_EnableClock	1
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_bus.h:798:22:LL_AHB3_GRP1_DisableClock	1
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_bus.h:939:22:LL_APB1_GRP1_EnableClock	1
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_bus.h:1038:22:LL_APB1_GRP1_DisableClock	1
+../Core/Src/stm32wbxx_hal_msp.c:64:6:HAL_MspInit	1
+../Core/Src/stm32wbxx_hal_msp.c:91:6:HAL_I2C_MspInit	3
+../Core/Src/stm32wbxx_hal_msp.c:138:6:HAL_I2C_MspDeInit	2
+../Core/Src/stm32wbxx_hal_msp.c:169:6:HAL_IPCC_MspInit	2
+../Core/Src/stm32wbxx_hal_msp.c:197:6:HAL_IPCC_MspDeInit	2
+../Core/Src/stm32wbxx_hal_msp.c:223:6:HAL_RTC_MspInit	3
+../Core/Src/stm32wbxx_hal_msp.c:264:6:HAL_RTC_MspDeInit	2

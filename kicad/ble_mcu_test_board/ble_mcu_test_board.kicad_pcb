@@ -13157,7 +13157,7 @@
 			(justify left bottom)
 		)
 	)
-	(gr_text "SWD/GCDV"
+	(gr_text "SWD/GDCV"
 		(at 133.1 93.1 0)
 		(layer "F.SilkS")
 		(uuid "7a7190d6-7db9-4352-8501-123fd13e24f2")

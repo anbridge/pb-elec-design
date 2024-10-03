@@ -15,15 +15,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, DATA
   5 .fini_array   00000004  08007d80  08007d80  00008d80  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .data         00000038  20000008  08007d84  00009008  2**2
+  6 .data         00000034  20000008  08007d84  00009008  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  7 BLE_DRIVER_CONTEXT 00000035  20000040  08007dbc  00009040  2**2
+  7 BLE_DRIVER_CONTEXT 00000035  2000003c  08007db8  0000903c  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 SYSTEM_DRIVER_CONTEXT 00000011  20000078  08007df1  00009078  2**2
+  8 SYSTEM_DRIVER_CONTEXT 00000011  20000074  08007ded  00009074  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          00000528  2000008c  08007e02  0000908c  2**2
+  9 .bss          00000528  20000088  08007dfe  00009088  2**2
                   ALLOC
- 10 ._user_heap_stack 00000604  200005b4  08007e02  000095b4  2**0
+ 10 ._user_heap_stack 00000600  200005b0  08007dfe  000095b0  2**0
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  00009a67  2**0
                   CONTENTS, READONLY
@@ -31,7 +31,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  13 MB_MEM1       000001bb  20030028  20030028  0000a000  2**2
                   ALLOC
- 14 .MB_MEM2      00000883  200301e4  08007e02  000091e4  2**2
+ 14 .MB_MEM2      00000883  200301e4  08007dfe  000091e4  2**2
                   CONTENTS, ALLOC, LOAD, DATA
  15 .debug_info   000267fa  00000000  00000000  00009a97  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -68,7 +68,7 @@ Disassembly of section .text:
  800014e:	2301      	movs	r3, #1
  8000150:	7023      	strb	r3, [r4, #0]
  8000152:	bd10      	pop	{r4, pc}
- 8000154:	2000008c 	.word	0x2000008c
+ 8000154:	20000088 	.word	0x20000088
  8000158:	00000000 	.word	0x00000000
  800015c:	08007af0 	.word	0x08007af0
 
@@ -81,7 +81,7 @@ Disassembly of section .text:
  800016a:	f3af 8000 	nop.w
  800016e:	bd08      	pop	{r3, pc}
  8000170:	00000000 	.word	0x00000000
- 8000174:	20000090 	.word	0x20000090
+ 8000174:	2000008c 	.word	0x2000008c
  8000178:	08007af0 	.word	0x08007af0
 
 0800017c <strlen>:
@@ -491,7 +491,7 @@ void MX_APPE_Init(void)
  80003a8:	bf00      	nop
 }
  80003aa:	bd80      	pop	{r7, pc}
- 80003ac:	200001d8 	.word	0x200001d8
+ 80003ac:	200001d4 	.word	0x200001d4
 
 080003b0 <Init_Exti>:
 
@@ -1331,7 +1331,7 @@ static void LinkTimerAfter(uint8_t TimerID, uint8_t RefTimerID)
  80007ac:	f85d 7b04 	ldr.w	r7, [sp], #4
  80007b0:	4770      	bx	lr
  80007b2:	bf00      	nop
- 80007b4:	200000a8 	.word	0x200000a8
+ 80007b4:	200000a4 	.word	0x200000a4
 
 080007b8 <LinkTimerBefore>:
  * @param  TimerID:   The ID of the Timer
@@ -1451,8 +1451,8 @@ static void LinkTimerBefore(uint8_t TimerID, uint8_t RefTimerID)
  8000868:	f85d 7b04 	ldr.w	r7, [sp], #4
  800086c:	4770      	bx	lr
  800086e:	bf00      	nop
- 8000870:	20000138 	.word	0x20000138
- 8000874:	200000a8 	.word	0x200000a8
+ 8000870:	20000134 	.word	0x20000134
+ 8000874:	200000a4 	.word	0x200000a4
 
 08000878 <linkTimer>:
  * @brief  Insert a Timer in the list
@@ -1680,10 +1680,10 @@ static uint16_t linkTimer(uint8_t TimerID)
  80009b6:	46bd      	mov	sp, r7
  80009b8:	bd80      	pop	{r7, pc}
  80009ba:	bf00      	nop
- 80009bc:	20000138 	.word	0x20000138
- 80009c0:	20000139 	.word	0x20000139
- 80009c4:	200000a8 	.word	0x200000a8
- 80009c8:	2000013c 	.word	0x2000013c
+ 80009bc:	20000134 	.word	0x20000134
+ 80009c0:	20000135 	.word	0x20000135
+ 80009c4:	200000a4 	.word	0x200000a4
+ 80009c8:	20000138 	.word	0x20000138
 
 080009cc <UnlinkTimer>:
  * @param  TimerID:   The ID of the Timer
@@ -1845,10 +1845,10 @@ static void UnlinkTimer(uint8_t TimerID, RequestReadSSR_t RequestReadSSR)
  8000abc:	46bd      	mov	sp, r7
  8000abe:	f85d 7b04 	ldr.w	r7, [sp], #4
  8000ac2:	4770      	bx	lr
- 8000ac4:	20000138 	.word	0x20000138
- 8000ac8:	20000139 	.word	0x20000139
- 8000acc:	200000a8 	.word	0x200000a8
- 8000ad0:	2000013c 	.word	0x2000013c
+ 8000ac4:	20000134 	.word	0x20000134
+ 8000ac8:	20000135 	.word	0x20000135
+ 8000acc:	200000a4 	.word	0x200000a4
+ 8000ad0:	20000138 	.word	0x20000138
 
 08000ad4 <ReturnTimeElapsed>:
  *        since the time the timer has been started
@@ -1940,10 +1940,10 @@ static uint16_t ReturnTimeElapsed(void)
  8000b3e:	46bd      	mov	sp, r7
  8000b40:	bd80      	pop	{r7, pc}
  8000b42:	bf00      	nop
- 8000b44:	2000013c 	.word	0x2000013c
- 8000b48:	20000144 	.word	0x20000144
- 8000b4c:	20000142 	.word	0x20000142
- 8000b50:	20000141 	.word	0x20000141
+ 8000b44:	20000138 	.word	0x20000138
+ 8000b48:	20000140 	.word	0x20000140
+ 8000b4c:	2000013e 	.word	0x2000013e
+ 8000b50:	2000013d 	.word	0x2000013d
 
 08000b54 <RestartWakeupCounter>:
  *    It assumes all condition are met to be allowed to write the wakeup counter
@@ -2052,9 +2052,9 @@ static void RestartWakeupCounter(uint16_t Value)
  8000bea:	3708      	adds	r7, #8
  8000bec:	46bd      	mov	sp, r7
  8000bee:	bd80      	pop	{r7, pc}
- 8000bf0:	2000013c 	.word	0x2000013c
- 8000bf4:	20000141 	.word	0x20000141
- 8000bf8:	200001d8 	.word	0x200001d8
+ 8000bf0:	20000138 	.word	0x20000138
+ 8000bf4:	2000013d 	.word	0x2000013d
+ 8000bf8:	200001d4 	.word	0x200001d4
  8000bfc:	58000800 	.word	0x58000800
  8000c00:	40002800 	.word	0x40002800
 
@@ -2277,11 +2277,11 @@ static void RescheduleTimerList(void)
  8000d1c:	46bd      	mov	sp, r7
  8000d1e:	bd80      	pop	{r7, pc}
  8000d20:	40002800 	.word	0x40002800
- 8000d24:	200001d8 	.word	0x200001d8
- 8000d28:	20000138 	.word	0x20000138
- 8000d2c:	200000a8 	.word	0x200000a8
- 8000d30:	20000140 	.word	0x20000140
- 8000d34:	20000146 	.word	0x20000146
+ 8000d24:	200001d4 	.word	0x200001d4
+ 8000d28:	20000134 	.word	0x20000134
+ 8000d2c:	200000a4 	.word	0x200000a4
+ 8000d30:	2000013c 	.word	0x2000013c
+ 8000d34:	20000142 	.word	0x20000142
 
 08000d38 <HW_TS_RTC_Wakeup_Handler>:
  * In order to ease maintainability, the unlock is done at the top and the lock at then end
@@ -2557,10 +2557,10 @@ __STATIC_FORCEINLINE void __set_PRIMASK(uint32_t priMask)
  8000eae:	46bd      	mov	sp, r7
  8000eb0:	bd80      	pop	{r7, pc}
  8000eb2:	bf00      	nop
- 8000eb4:	200001d8 	.word	0x200001d8
- 8000eb8:	20000138 	.word	0x20000138
- 8000ebc:	200000a8 	.word	0x200000a8
- 8000ec0:	20000140 	.word	0x20000140
+ 8000eb4:	200001d4 	.word	0x200001d4
+ 8000eb8:	20000134 	.word	0x20000134
+ 8000ebc:	200000a4 	.word	0x200000a4
+ 8000ec0:	2000013c 	.word	0x2000013c
  8000ec4:	58000800 	.word	0x58000800
 
 08000ec8 <HW_TS_Init>:
@@ -2838,16 +2838,16 @@ void HW_TS_Init(HW_TS_InitMode_t TimerInitMode, RTC_HandleTypeDef *phrtc)
  800104a:	46bd      	mov	sp, r7
  800104c:	bd80      	pop	{r7, pc}
  800104e:	bf00      	nop
- 8001050:	200001d8 	.word	0x200001d8
+ 8001050:	200001d4 	.word	0x200001d4
  8001054:	40002800 	.word	0x40002800
- 8001058:	20000141 	.word	0x20000141
- 800105c:	20000142 	.word	0x20000142
- 8001060:	20000144 	.word	0x20000144
- 8001064:	20000146 	.word	0x20000146
- 8001068:	20000140 	.word	0x20000140
- 800106c:	2000013c 	.word	0x2000013c
- 8001070:	200000a8 	.word	0x200000a8
- 8001074:	20000138 	.word	0x20000138
+ 8001058:	2000013d 	.word	0x2000013d
+ 800105c:	2000013e 	.word	0x2000013e
+ 8001060:	20000140 	.word	0x20000140
+ 8001064:	20000142 	.word	0x20000142
+ 8001068:	2000013c 	.word	0x2000013c
+ 800106c:	20000138 	.word	0x20000138
+ 8001070:	200000a4 	.word	0x200000a4
+ 8001074:	20000134 	.word	0x20000134
  8001078:	58000800 	.word	0x58000800
 
 0800107c <HW_TS_Stop>:
@@ -3030,12 +3030,12 @@ void HW_TS_Stop(uint8_t timer_id)
  8001166:	46bd      	mov	sp, r7
  8001168:	bd80      	pop	{r7, pc}
  800116a:	bf00      	nop
- 800116c:	200001d8 	.word	0x200001d8
- 8001170:	200000a8 	.word	0x200000a8
- 8001174:	20000138 	.word	0x20000138
+ 800116c:	200001d4 	.word	0x200001d4
+ 8001170:	200000a4 	.word	0x200000a4
+ 8001174:	20000134 	.word	0x20000134
  8001178:	40002800 	.word	0x40002800
  800117c:	58000800 	.word	0x58000800
- 8001180:	20000139 	.word	0x20000139
+ 8001180:	20000135 	.word	0x20000135
 
 08001184 <HW_TS_Start>:
 
@@ -3215,10 +3215,10 @@ void HW_TS_Start(uint8_t timer_id, uint32_t timeout_ticks)
  800127a:	46bd      	mov	sp, r7
  800127c:	bd80      	pop	{r7, pc}
  800127e:	bf00      	nop
- 8001280:	200000a8 	.word	0x200000a8
- 8001284:	200001d8 	.word	0x200001d8
- 8001288:	20000138 	.word	0x20000138
- 800128c:	20000139 	.word	0x20000139
+ 8001280:	200000a4 	.word	0x200000a4
+ 8001284:	200001d4 	.word	0x200001d4
+ 8001288:	20000134 	.word	0x20000134
+ 800128c:	20000135 	.word	0x20000135
 
 08001290 <HW_TS_RTC_Int_AppNot>:
 
@@ -3281,10 +3281,10 @@ __STATIC_INLINE void LL_AHB2_GRP1_EnableClock(uint32_t Periphs)
  80012da:	4770      	bx	lr
 
 080012dc <main>:
-  * @retval int
   */
-uint8_t buf22[512];
 uint8_t chnl = 0x01;
+uint8_t buf22[512];
+
 int main(void)
 {
  80012dc:	b580      	push	{r7, lr}
@@ -3338,27 +3338,27 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
-  {
-    /* USER CODE END WHILE */
-    MX_APPE_Process();
+   {
+ 	    /* USER CODE END WHILE */
+ 	    MX_APPE_Process();
  800130a:	f7ff f98b 	bl	8000624 <MX_APPE_Process>
-    if(!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6)){
+ 	    if(!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6)){
  800130e:	2140      	movs	r1, #64	@ 0x40
  8001310:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
  8001314:	f000 fed8 	bl	80020c8 <HAL_GPIO_ReadPin>
  8001318:	4603      	mov	r3, r0
  800131a:	2b00      	cmp	r3, #0
  800131c:	d1f5      	bne.n	800130a <main+0x2e>
-		  buf22[0] = chnl;
+ 			  buf22[0] = chnl;
  800131e:	4b23      	ldr	r3, [pc, #140]	@ (80013ac <main+0xd0>)
  8001320:	781a      	ldrb	r2, [r3, #0]
  8001322:	4b23      	ldr	r3, [pc, #140]	@ (80013b0 <main+0xd4>)
  8001324:	701a      	strb	r2, [r3, #0]
-		  buf22[1] = 0x00;
+ 			  buf22[1] = 0x00;
  8001326:	4b22      	ldr	r3, [pc, #136]	@ (80013b0 <main+0xd4>)
  8001328:	2200      	movs	r2, #0
  800132a:	705a      	strb	r2, [r3, #1]
-    	HAL_I2C_Master_Transmit(&hi2c1, 0x70 << 1, &chnl, 1, 1000);
+ 	    	HAL_I2C_Master_Transmit(&hi2c1, 0x70 << 1, &chnl, 1, 1000);
  800132c:	f44f 737a 	mov.w	r3, #1000	@ 0x3e8
  8001330:	9300      	str	r3, [sp, #0]
  8001332:	2301      	movs	r3, #1
@@ -3366,13 +3366,13 @@ int main(void)
  8001336:	21e0      	movs	r1, #224	@ 0xe0
  8001338:	481e      	ldr	r0, [pc, #120]	@ (80013b4 <main+0xd8>)
  800133a:	f000 ff9d 	bl	8002278 <HAL_I2C_Master_Transmit>
-    	HAL_StatusTypeDef result;
-    	for (uint8_t i = 0; i<128; i++)
+ 	    	HAL_StatusTypeDef result;
+ 	    	for (uint8_t i = 0; i<128; i++)
  800133e:	2300      	movs	r3, #0
  8001340:	71fb      	strb	r3, [r7, #7]
  8001342:	e019      	b.n	8001378 <main+0x9c>
-    		  {
-    			  result = HAL_I2C_IsDeviceReady(&hi2c1, (uint16_t) (i<<1), 2, 2);
+ 	    		  {
+ 	    			  result = HAL_I2C_IsDeviceReady(&hi2c1, (uint16_t) (i<<1), 2, 2);
  8001344:	79fb      	ldrb	r3, [r7, #7]
  8001346:	b29b      	uxth	r3, r3
  8001348:	005b      	lsls	r3, r3, #1
@@ -3383,24 +3383,24 @@ int main(void)
  8001352:	f001 f8a9 	bl	80024a8 <HAL_I2C_IsDeviceReady>
  8001356:	4603      	mov	r3, r0
  8001358:	71bb      	strb	r3, [r7, #6]
-    			  if (result == HAL_OK && i != 0x70)
+ 	    			  if (result == HAL_OK && i != 0x70)
  800135a:	79bb      	ldrb	r3, [r7, #6]
  800135c:	2b00      	cmp	r3, #0
  800135e:	d108      	bne.n	8001372 <main+0x96>
  8001360:	79fb      	ldrb	r3, [r7, #7]
  8001362:	2b70      	cmp	r3, #112	@ 0x70
  8001364:	d005      	beq.n	8001372 <main+0x96>
-    			  {
+ 	    			  {
 
-    				  buf22[2] = 0x00;
+ 	    				  buf22[2] = 0x00;
  8001366:	4b12      	ldr	r3, [pc, #72]	@ (80013b0 <main+0xd4>)
  8001368:	2200      	movs	r2, #0
  800136a:	709a      	strb	r2, [r3, #2]
-    				  buf22[3] = 0xFF & i;
+ 	    				  buf22[3] = 0xFF & i;
  800136c:	4a10      	ldr	r2, [pc, #64]	@ (80013b0 <main+0xd4>)
  800136e:	79fb      	ldrb	r3, [r7, #7]
  8001370:	70d3      	strb	r3, [r2, #3]
-    	for (uint8_t i = 0; i<128; i++)
+ 	    	for (uint8_t i = 0; i<128; i++)
  8001372:	79fb      	ldrb	r3, [r7, #7]
  8001374:	3301      	adds	r3, #1
  8001376:	71fb      	strb	r3, [r7, #7]
@@ -3408,23 +3408,23 @@ int main(void)
  800137c:	2b00      	cmp	r3, #0
  800137e:	dae1      	bge.n	8001344 <main+0x68>
 
-    			  }
-    		  }
-    	Custom_STM_App_Update_Char(0, (uint8_t *)buf22);
+ 	    			  }
+ 	    		  }
+ 	    	Custom_STM_App_Update_Char(0, (uint8_t *)buf22);
  8001380:	490b      	ldr	r1, [pc, #44]	@ (80013b0 <main+0xd4>)
  8001382:	2000      	movs	r0, #0
  8001384:	f005 fe90 	bl	80070a8 <Custom_STM_App_Update_Char>
-    	HAL_Delay(250);
+ 	    	HAL_Delay(250);
  8001388:	20fa      	movs	r0, #250	@ 0xfa
  800138a:	f7ff f926 	bl	80005da <HAL_Delay>
-    	chnl = chnl << 1;
+ 	    	chnl = chnl << 1;
  800138e:	4b07      	ldr	r3, [pc, #28]	@ (80013ac <main+0xd0>)
  8001390:	781b      	ldrb	r3, [r3, #0]
  8001392:	005b      	lsls	r3, r3, #1
  8001394:	b2da      	uxtb	r2, r3
  8001396:	4b05      	ldr	r3, [pc, #20]	@ (80013ac <main+0xd0>)
  8001398:	701a      	strb	r2, [r3, #0]
-    	if (chnl == 0)chnl = 1;
+ 	    	if (chnl == 0)chnl = 1;
  800139a:	4b04      	ldr	r3, [pc, #16]	@ (80013ac <main+0xd0>)
  800139c:	781b      	ldrb	r3, [r3, #0]
  800139e:	2b00      	cmp	r3, #0
@@ -3432,12 +3432,12 @@ int main(void)
  80013a2:	4b02      	ldr	r3, [pc, #8]	@ (80013ac <main+0xd0>)
  80013a4:	2201      	movs	r2, #1
  80013a6:	701a      	strb	r2, [r3, #0]
-    MX_APPE_Process();
+ 	    MX_APPE_Process();
  80013a8:	e7af      	b.n	800130a <main+0x2e>
  80013aa:	bf00      	nop
  80013ac:	20000008 	.word	0x20000008
- 80013b0:	200001fc 	.word	0x200001fc
- 80013b4:	20000148 	.word	0x20000148
+ 80013b0:	200001f8 	.word	0x200001f8
+ 80013b4:	20000144 	.word	0x20000144
 
 080013b8 <SystemClock_Config>:
 /**
@@ -3679,7 +3679,7 @@ static void MX_I2C1_Init(void)
  80014ea:	bf00      	nop
  80014ec:	bd80      	pop	{r7, pc}
  80014ee:	bf00      	nop
- 80014f0:	20000148 	.word	0x20000148
+ 80014f0:	20000144 	.word	0x20000144
  80014f4:	40005400 	.word	0x40005400
  80014f8:	00b07cb4 	.word	0x00b07cb4
 
@@ -3719,7 +3719,7 @@ static void MX_IPCC_Init(void)
  8001516:	bf00      	nop
  8001518:	bd80      	pop	{r7, pc}
  800151a:	bf00      	nop
- 800151c:	2000019c 	.word	0x2000019c
+ 800151c:	20000198 	.word	0x20000198
  8001520:	58000c00 	.word	0x58000c00
 
 08001524 <MX_RF_Init>:
@@ -3817,7 +3817,7 @@ static void MX_RTC_Init(void)
 }
  8001588:	bf00      	nop
  800158a:	bd80      	pop	{r7, pc}
- 800158c:	200001d8 	.word	0x200001d8
+ 800158c:	200001d4 	.word	0x200001d4
  8001590:	40002800 	.word	0x40002800
 
 08001594 <MX_GPIO_Init>:
@@ -4718,15 +4718,15 @@ LoopForever:
  8001978:	20003000 	.word	0x20003000
   INIT_DATA _sdata, _edata, _sidata
  800197c:	20000008 	.word	0x20000008
- 8001980:	20000040 	.word	0x20000040
+ 8001980:	2000003c 	.word	0x2000003c
  8001984:	08007d84 	.word	0x08007d84
   INIT_DATA _sMB_MEM2, _eMB_MEM2, _siMB_MEM2
  8001988:	200301e4 	.word	0x200301e4
  800198c:	20030a67 	.word	0x20030a67
- 8001990:	08007e02 	.word	0x08007e02
+ 8001990:	08007dfe 	.word	0x08007dfe
   INIT_BSS _sbss, _ebss
- 8001994:	2000008c 	.word	0x2000008c
- 8001998:	200005b4 	.word	0x200005b4
+ 8001994:	20000088 	.word	0x20000088
+ 8001998:	200005b0 	.word	0x200005b0
 
 0800199c <ADC1_IRQHandler>:
  * @retval None
@@ -4912,7 +4912,7 @@ __weak void HAL_IncTick(void)
  8001a70:	4770      	bx	lr
  8001a72:	bf00      	nop
  8001a74:	2000001c 	.word	0x2000001c
- 8001a78:	200003fc 	.word	0x200003fc
+ 8001a78:	200003f8 	.word	0x200003f8
 
 08001a7c <HAL_GetTick>:
   * @note This function is declared as __weak to be overwritten in case of other
@@ -4932,7 +4932,7 @@ __weak uint32_t HAL_GetTick(void)
  8001a88:	f85d 7b04 	ldr.w	r7, [sp], #4
  8001a8c:	4770      	bx	lr
  8001a8e:	bf00      	nop
- 8001a90:	200003fc 	.word	0x200003fc
+ 8001a90:	200003f8 	.word	0x200003f8
 
 08001a94 <HAL_GetTickPrio>:
 /**
@@ -15042,8 +15042,8 @@ void SVCCTL_Init( void )
  8005970:	bf00      	nop
 }
  8005972:	bd80      	pop	{r7, pc}
- 8005974:	20000040 	.word	0x20000040
- 8005978:	20000060 	.word	0x20000060
+ 8005974:	2000003c 	.word	0x2000003c
+ 8005978:	2000005c 	.word	0x2000005c
 
 0800597c <SVCCTL_SvcInit>:
 
@@ -15148,7 +15148,7 @@ void SVCCTL_RegisterSvcHandler( SVC_CTL_p_EvtHandler_t pfBLE_SVC_Service_Event_H
  80059f4:	f85d 7b04 	ldr.w	r7, [sp], #4
  80059f8:	4770      	bx	lr
  80059fa:	bf00      	nop
- 80059fc:	20000040 	.word	0x20000040
+ 80059fc:	2000003c 	.word	0x2000003c
 
 08005a00 <SVCCTL_UserEvtRx>:
 
@@ -15309,7 +15309,7 @@ __WEAK SVCCTL_UserEvtFlowStatus_t SVCCTL_UserEvtRx( void *pckt )
  8005a9e:	3718      	adds	r7, #24
  8005aa0:	46bd      	mov	sp, r7
  8005aa2:	bd80      	pop	{r7, pc}
- 8005aa4:	20000040 	.word	0x20000040
+ 8005aa4:	2000003c 	.word	0x2000003c
 
 08005aa8 <SHCI_C2_BLE_Init>:
 
@@ -15731,8 +15731,8 @@ void hci_init(void(* UserEvtRx)(void* pData), void* pConf)
  8005cb6:	3708      	adds	r7, #8
  8005cb8:	46bd      	mov	sp, r7
  8005cba:	bd80      	pop	{r7, pc}
- 8005cbc:	20000428 	.word	0x20000428
- 8005cc0:	20000400 	.word	0x20000400
+ 8005cbc:	20000424 	.word	0x20000424
+ 8005cc0:	200003fc 	.word	0x200003fc
 
 08005cc4 <hci_user_evt_proc>:
 
@@ -15844,9 +15844,9 @@ void hci_user_evt_proc(void)
  8005d4e:	46bd      	mov	sp, r7
  8005d50:	bd80      	pop	{r7, pc}
  8005d52:	bf00      	nop
- 8005d54:	20000068 	.word	0x20000068
- 8005d58:	20000074 	.word	0x20000074
- 8005d5c:	20000400 	.word	0x20000400
+ 8005d54:	20000064 	.word	0x20000064
+ 8005d58:	20000070 	.word	0x20000070
+ 8005d5c:	200003fc 	.word	0x200003fc
 
 08005d60 <hci_send_req>:
 
@@ -16033,8 +16033,8 @@ int hci_send_req(struct hci_request *p_cmd, uint8_t async)
  8005e5a:	46bd      	mov	sp, r7
  8005e5c:	bd80      	pop	{r7, pc}
  8005e5e:	bf00      	nop
- 8005e60:	2000042c 	.word	0x2000042c
- 8005e64:	20000420 	.word	0x20000420
+ 8005e60:	20000428 	.word	0x20000428
+ 8005e64:	2000041c 	.word	0x2000041c
 
 08005e68 <TlInit>:
 
@@ -16098,11 +16098,11 @@ static void TlInit( TL_CmdPacket_t * p_cmdbuffer )
  8005eaa:	46bd      	mov	sp, r7
  8005eac:	bd80      	pop	{r7, pc}
  8005eae:	bf00      	nop
- 8005eb0:	20000420 	.word	0x20000420
- 8005eb4:	20000070 	.word	0x20000070
- 8005eb8:	20000068 	.word	0x20000068
- 8005ebc:	20000074 	.word	0x20000074
- 8005ec0:	20000400 	.word	0x20000400
+ 8005eb0:	2000041c 	.word	0x2000041c
+ 8005eb4:	2000006c 	.word	0x2000006c
+ 8005eb8:	20000064 	.word	0x20000064
+ 8005ebc:	20000070 	.word	0x20000070
+ 8005ec0:	200003fc 	.word	0x200003fc
  8005ec4:	08005f55 	.word	0x08005f55
 
 08005ec8 <SendCmd>:
@@ -16149,8 +16149,8 @@ static void SendCmd(uint16_t opcode, uint8_t plen, void *param)
  8005f06:	3708      	adds	r7, #8
  8005f08:	46bd      	mov	sp, r7
  8005f0a:	bd80      	pop	{r7, pc}
- 8005f0c:	20000070 	.word	0x20000070
- 8005f10:	20000400 	.word	0x20000400
+ 8005f0c:	2000006c 	.word	0x2000006c
+ 8005f10:	200003fc 	.word	0x200003fc
 
 08005f14 <NotifyCmdStatus>:
 
@@ -16201,7 +16201,7 @@ static void NotifyCmdStatus(HCI_TL_CmdStatus_t hcicmdstatus)
  8005f4a:	3708      	adds	r7, #8
  8005f4c:	46bd      	mov	sp, r7
  8005f4e:	bd80      	pop	{r7, pc}
- 8005f50:	20000428 	.word	0x20000428
+ 8005f50:	20000424 	.word	0x20000424
 
 08005f54 <TlEvtReceived>:
 
@@ -16248,8 +16248,8 @@ static void TlEvtReceived(TL_EvtPacket_t *hcievt)
  8005f8e:	46bd      	mov	sp, r7
  8005f90:	bd80      	pop	{r7, pc}
  8005f92:	bf00      	nop
- 8005f94:	20000420 	.word	0x20000420
- 8005f98:	20000068 	.word	0x20000068
+ 8005f94:	2000041c 	.word	0x2000041c
+ 8005f98:	20000064 	.word	0x20000064
 
 08005f9c <hci_register_io_bus>:
 #include "hci_tl.h"
@@ -16320,8 +16320,8 @@ void shci_init(void(* UserEvtRx)(void* pData), void* pConf)
  8005fee:	3708      	adds	r7, #8
  8005ff0:	46bd      	mov	sp, r7
  8005ff2:	bd80      	pop	{r7, pc}
- 8005ff4:	20000450 	.word	0x20000450
- 8005ff8:	20000430 	.word	0x20000430
+ 8005ff4:	2000044c 	.word	0x2000044c
+ 8005ff8:	2000042c 	.word	0x2000042c
 
 08005ffc <shci_user_evt_proc>:
 
@@ -16433,9 +16433,9 @@ void shci_user_evt_proc(void)
  8006086:	46bd      	mov	sp, r7
  8006088:	bd80      	pop	{r7, pc}
  800608a:	bf00      	nop
- 800608c:	20000078 	.word	0x20000078
- 8006090:	20000088 	.word	0x20000088
- 8006094:	20000430 	.word	0x20000430
+ 800608c:	20000074 	.word	0x20000074
+ 8006090:	20000084 	.word	0x20000084
+ 8006094:	2000042c 	.word	0x2000042c
 
 08006098 <shci_send>:
 
@@ -16517,9 +16517,9 @@ void shci_send( uint16_t cmd_code, uint8_t len_cmd_payload, uint8_t * p_cmd_payl
  800610a:	3710      	adds	r7, #16
  800610c:	46bd      	mov	sp, r7
  800610e:	bd80      	pop	{r7, pc}
- 8006110:	20000084 	.word	0x20000084
- 8006114:	20000454 	.word	0x20000454
- 8006118:	20000430 	.word	0x20000430
+ 8006110:	20000080 	.word	0x20000080
+ 8006114:	20000450 	.word	0x20000450
+ 8006118:	2000042c 	.word	0x2000042c
 
 0800611c <TlInit>:
 
@@ -16583,10 +16583,10 @@ static void TlInit( TL_CmdPacket_t * p_cmdbuffer )
  8006162:	46bd      	mov	sp, r7
  8006164:	bd80      	pop	{r7, pc}
  8006166:	bf00      	nop
- 8006168:	20000084 	.word	0x20000084
- 800616c:	20000078 	.word	0x20000078
- 8006170:	20000088 	.word	0x20000088
- 8006174:	20000430 	.word	0x20000430
+ 8006168:	20000080 	.word	0x20000080
+ 800616c:	20000074 	.word	0x20000074
+ 8006170:	20000084 	.word	0x20000084
+ 8006174:	2000042c 	.word	0x2000042c
  8006178:	080061d1 	.word	0x080061d1
  800617c:	080061e9 	.word	0x080061e9
 
@@ -16648,8 +16648,8 @@ static void Cmd_SetStatus(SHCI_TL_CmdStatus_t shcicmdstatus)
  80061c2:	3708      	adds	r7, #8
  80061c4:	46bd      	mov	sp, r7
  80061c6:	bd80      	pop	{r7, pc}
- 80061c8:	20000450 	.word	0x20000450
- 80061cc:	20000080 	.word	0x20000080
+ 80061c8:	2000044c 	.word	0x2000044c
+ 80061cc:	2000007c 	.word	0x2000007c
 
 080061d0 <TlCmdEvtReceived>:
 
@@ -16695,7 +16695,7 @@ static void TlUserEvtReceived(TL_EvtPacket_t *shcievt)
  8006202:	46bd      	mov	sp, r7
  8006204:	bd80      	pop	{r7, pc}
  8006206:	bf00      	nop
- 8006208:	20000078 	.word	0x20000078
+ 8006208:	20000074 	.word	0x20000074
 
 0800620c <shci_register_io_bus>:
 #include "shci_tl.h"
@@ -16881,8 +16881,8 @@ int32_t TL_BLE_Init( void* pConf )
  8006308:	200300c8 	.word	0x200300c8
  800630c:	20030000 	.word	0x20030000
  8006310:	20030a58 	.word	0x20030a58
- 8006314:	20000460 	.word	0x20000460
- 8006318:	20000464 	.word	0x20000464
+ 8006314:	2000045c 	.word	0x2000045c
+ 8006318:	20000460 	.word	0x20000460
 
 0800631c <TL_BLE_SendCmd>:
 
@@ -16991,7 +16991,7 @@ void HW_IPCC_BLE_RxEvtNot(void)
  80063a8:	bd80      	pop	{r7, pc}
  80063aa:	bf00      	nop
  80063ac:	200300c8 	.word	0x200300c8
- 80063b0:	20000460 	.word	0x20000460
+ 80063b0:	2000045c 	.word	0x2000045c
 
 080063b4 <HW_IPCC_BLE_AclDataAckNot>:
 
@@ -17012,7 +17012,7 @@ void HW_IPCC_BLE_AclDataAckNot(void)
 }
  80063c0:	bd80      	pop	{r7, pc}
  80063c2:	bf00      	nop
- 80063c4:	20000464 	.word	0x20000464
+ 80063c4:	20000460 	.word	0x20000460
 
 080063c8 <TL_SYS_Init>:
 
@@ -17071,8 +17071,8 @@ int32_t TL_SYS_Init( void* pConf  )
  800640a:	bd80      	pop	{r7, pc}
  800640c:	200300d0 	.word	0x200300d0
  8006410:	20030000 	.word	0x20030000
- 8006414:	20000468 	.word	0x20000468
- 8006418:	2000046c 	.word	0x2000046c
+ 8006414:	20000464 	.word	0x20000464
+ 8006418:	20000468 	.word	0x20000468
 
 0800641c <TL_SYS_SendCmd>:
 
@@ -17143,7 +17143,7 @@ void HW_IPCC_SYS_CmdEvtNot(void)
 }
  8006476:	bd80      	pop	{r7, pc}
  8006478:	20030000 	.word	0x20030000
- 800647c:	20000468 	.word	0x20000468
+ 800647c:	20000464 	.word	0x20000464
 
 08006480 <HW_IPCC_SYS_EvtNot>:
 
@@ -17191,7 +17191,7 @@ void HW_IPCC_SYS_EvtNot( void )
  80064b8:	bd80      	pop	{r7, pc}
  80064ba:	bf00      	nop
  80064bc:	200300d0 	.word	0x200300d0
- 80064c0:	2000046c 	.word	0x2000046c
+ 80064c0:	20000468 	.word	0x20000468
 
 080064c4 <TL_MM_Init>:
 
@@ -17268,9 +17268,9 @@ void TL_MM_Init( TL_MM_Config_t *p_Config )
  8006528:	46bd      	mov	sp, r7
  800652a:	bd80      	pop	{r7, pc}
  800652c:	200300b8 	.word	0x200300b8
- 8006530:	20000458 	.word	0x20000458
+ 8006530:	20000454 	.word	0x20000454
  8006534:	20030000 	.word	0x20030000
- 8006538:	20000470 	.word	0x20000470
+ 8006538:	2000046c 	.word	0x2000046c
 
 0800653c <TL_MM_EvtDone>:
 
@@ -17301,7 +17301,7 @@ void TL_MM_EvtDone(TL_EvtPacket_t * phcievt)
  800655e:	46bd      	mov	sp, r7
  8006560:	bd80      	pop	{r7, pc}
  8006562:	bf00      	nop
- 8006564:	20000458 	.word	0x20000458
+ 8006564:	20000454 	.word	0x20000454
  8006568:	0800656d 	.word	0x0800656d
 
 0800656c <SendFreeBuf>:
@@ -17344,7 +17344,7 @@ static void SendFreeBuf( void )
  800659e:	46bd      	mov	sp, r7
  80065a0:	bd80      	pop	{r7, pc}
  80065a2:	bf00      	nop
- 80065a4:	20000458 	.word	0x20000458
+ 80065a4:	20000454 	.word	0x20000454
  80065a8:	20030000 	.word	0x20030000
 
 080065ac <TL_TRACES_Init>:
@@ -18201,7 +18201,7 @@ void APP_BLE_Init(void)
  800697a:	bf00      	nop
  800697c:	08007b44 	.word	0x08007b44
  8006980:	08005cc5 	.word	0x08005cc5
- 8006984:	2000047c 	.word	0x2000047c
+ 8006984:	20000478 	.word	0x20000478
  8006988:	08006da5 	.word	0x08006da5
 
 0800698c <SVCCTL_App_Notification>:
@@ -18434,8 +18434,8 @@ SVCCTL_UserEvtFlowStatus_t SVCCTL_App_Notification(void *p_Pckt)
  8006b16:	3728      	adds	r7, #40	@ 0x28
  8006b18:	46bd      	mov	sp, r7
  8006b1a:	bd80      	pop	{r7, pc}
- 8006b1c:	2000047c 	.word	0x2000047c
- 8006b20:	20000500 	.word	0x20000500
+ 8006b1c:	20000478 	.word	0x20000478
+ 8006b20:	200004fc 	.word	0x200004fc
  8006b24:	0001b207 	.word	0x0001b207
 
 08006b28 <Ble_Tl_Init>:
@@ -18748,7 +18748,7 @@ static void Ble_Hci_Gap_Gatt_Init(void)
  8006ca8:	08007d44 	.word	0x08007d44
  8006cac:	08007d54 	.word	0x08007d54
  8006cb0:	08007b80 	.word	0x08007b80
- 8006cb4:	2000047c 	.word	0x2000047c
+ 8006cb4:	20000478 	.word	0x20000478
  8006cb8:	0001b207 	.word	0x0001b207
 
 08006cbc <Adv_Request>:
@@ -18798,7 +18798,7 @@ static void Adv_Request(APP_BLE_ConnStatus_t NewStatus)
   /* Update Advertising data */
   ret = aci_gap_update_adv_data(sizeof(a_AdvData), (uint8_t*) a_AdvData);
  8006cfe:	4906      	ldr	r1, [pc, #24]	@ (8006d18 <Adv_Request+0x5c>)
- 8006d00:	2014      	movs	r0, #20
+ 8006d00:	2010      	movs	r0, #16
  8006d02:	f7fd ffb5 	bl	8004c70 <aci_gap_update_adv_data>
  8006d06:	4603      	mov	r3, r0
  8006d08:	73fb      	strb	r3, [r7, #15]
@@ -18814,7 +18814,7 @@ static void Adv_Request(APP_BLE_ConnStatus_t NewStatus)
  8006d0e:	46bd      	mov	sp, r7
  8006d10:	bd80      	pop	{r7, pc}
  8006d12:	bf00      	nop
- 8006d14:	2000047c 	.word	0x2000047c
+ 8006d14:	20000478 	.word	0x20000478
  8006d18:	20000020 	.word	0x20000020
 
 08006d1c <BleGetBdAddress>:
@@ -18920,7 +18920,7 @@ const uint8_t* BleGetBdAddress(void)
  8006d96:	46bd      	mov	sp, r7
  8006d98:	bd80      	pop	{r7, pc}
  8006d9a:	bf00      	nop
- 8006d9c:	20000474 	.word	0x20000474
+ 8006d9c:	20000470 	.word	0x20000470
  8006da0:	08007d3c 	.word	0x08007d3c
 
 08006da4 <Adv_Cancel>:
@@ -18969,7 +18969,7 @@ static void Adv_Cancel(void)
  8006dce:	46bd      	mov	sp, r7
  8006dd0:	bd80      	pop	{r7, pc}
  8006dd2:	bf00      	nop
- 8006dd4:	2000047c 	.word	0x2000047c
+ 8006dd4:	20000478 	.word	0x20000478
 
 08006dd8 <hci_notify_asynch_evt>:
  *
@@ -19517,9 +19517,9 @@ void SVCCTL_InitCustomSvc(void)
  8007094:	46bd      	mov	sp, r7
  8007096:	bd80      	pop	{r7, pc}
  8007098:	08006ee9 	.word	0x08006ee9
- 800709c:	20000504 	.word	0x20000504
- 80070a0:	20000034 	.word	0x20000034
- 80070a4:	20000506 	.word	0x20000506
+ 800709c:	20000500 	.word	0x20000500
+ 80070a0:	20000030 	.word	0x20000030
+ 80070a4:	20000502 	.word	0x20000502
 
 080070a8 <Custom_STM_App_Update_Char>:
  * @param  CharOpcode: Characteristic identifier
@@ -19587,8 +19587,8 @@ tBleStatus Custom_STM_App_Update_Char(Custom_STM_Char_Opcode_t CharOpcode, uint8
  80070e6:	46bd      	mov	sp, r7
  80070e8:	bd80      	pop	{r7, pc}
  80070ea:	bf00      	nop
- 80070ec:	20000504 	.word	0x20000504
- 80070f0:	20000034 	.word	0x20000034
+ 80070ec:	20000500 	.word	0x20000500
+ 80070f0:	20000030 	.word	0x20000030
 
 080070f4 <LL_PWR_EnableBootC2>:
 {
@@ -20378,7 +20378,7 @@ void HW_IPCC_MM_SendFreeBuf( void (*cb)( void ) )
  8007524:	bd80      	pop	{r7, pc}
  8007526:	bf00      	nop
  8007528:	58000c00 	.word	0x58000c00
- 800752c:	20000508 	.word	0x20000508
+ 800752c:	20000504 	.word	0x20000504
 
 08007530 <HW_IPCC_MM_FreeBufHandler>:
 
@@ -20407,7 +20407,7 @@ static void HW_IPCC_MM_FreeBufHandler( void )
  800754c:	bd80      	pop	{r7, pc}
  800754e:	bf00      	nop
  8007550:	58000c00 	.word	0x58000c00
- 8007554:	20000508 	.word	0x20000508
+ 8007554:	20000504 	.word	0x20000504
 
 08007558 <HW_IPCC_TRACES_Init>:
 
@@ -20473,8 +20473,8 @@ void UTIL_LPM_Init( void )
  8007598:	f85d 7b04 	ldr.w	r7, [sp], #4
  800759c:	4770      	bx	lr
  800759e:	bf00      	nop
- 80075a0:	2000050c 	.word	0x2000050c
- 80075a4:	20000510 	.word	0x20000510
+ 80075a0:	20000508 	.word	0x20000508
+ 80075a4:	2000050c 	.word	0x2000050c
 
 080075a8 <UTIL_LPM_SetOffMode>:
   
@@ -20554,7 +20554,7 @@ void UTIL_LPM_SetOffMode( UTIL_LPM_bm_t lpm_id_bm, UTIL_LPM_State_t state )
  80075fc:	46bd      	mov	sp, r7
  80075fe:	f85d 7b04 	ldr.w	r7, [sp], #4
  8007602:	4770      	bx	lr
- 8007604:	20000510 	.word	0x20000510
+ 8007604:	2000050c 	.word	0x2000050c
 
 08007608 <UTIL_SEQ_Run>:
  * That is the reason why many variables that are used only in that function are declared static.
@@ -20888,14 +20888,14 @@ void UTIL_SEQ_Run( UTIL_SEQ_bm_t Mask_bm )
  80077da:	46bd      	mov	sp, r7
  80077dc:	bd80      	pop	{r7, pc}
  80077de:	bf00      	nop
- 80077e0:	2000003c 	.word	0x2000003c
- 80077e4:	20000514 	.word	0x20000514
- 80077e8:	20000518 	.word	0x20000518
- 80077ec:	20000038 	.word	0x20000038
- 80077f0:	2000051c 	.word	0x2000051c
- 80077f4:	200005a4 	.word	0x200005a4
- 80077f8:	20000520 	.word	0x20000520
- 80077fc:	20000524 	.word	0x20000524
+ 80077e0:	20000038 	.word	0x20000038
+ 80077e4:	20000510 	.word	0x20000510
+ 80077e8:	20000514 	.word	0x20000514
+ 80077ec:	20000034 	.word	0x20000034
+ 80077f0:	20000518 	.word	0x20000518
+ 80077f4:	200005a0 	.word	0x200005a0
+ 80077f8:	2000051c 	.word	0x2000051c
+ 80077fc:	20000520 	.word	0x20000520
 
 08007800 <UTIL_SEQ_RegTask>:
 
@@ -20944,7 +20944,7 @@ void UTIL_SEQ_RegTask(UTIL_SEQ_bm_t TaskId_bm, uint32_t Flags, void (*Task)( voi
  800783a:	3720      	adds	r7, #32
  800783c:	46bd      	mov	sp, r7
  800783e:	bd80      	pop	{r7, pc}
- 8007840:	20000524 	.word	0x20000524
+ 8007840:	20000520 	.word	0x20000520
 
 08007844 <UTIL_SEQ_SetTask>:
 
@@ -21000,8 +21000,8 @@ void UTIL_SEQ_SetTask( UTIL_SEQ_bm_t TaskId_bm , uint32_t Task_Prio )
  800788c:	46bd      	mov	sp, r7
  800788e:	f85d 7b04 	ldr.w	r7, [sp], #4
  8007892:	4770      	bx	lr
- 8007894:	20000514 	.word	0x20000514
- 8007898:	200005a4 	.word	0x200005a4
+ 8007894:	20000510 	.word	0x20000510
+ 8007898:	200005a0 	.word	0x200005a0
 
 0800789c <UTIL_SEQ_PauseTask>:
   UTIL_SEQ_EXIT_CRITICAL_SECTION();
@@ -21051,7 +21051,7 @@ void UTIL_SEQ_PauseTask( UTIL_SEQ_bm_t TaskId_bm )
  80078d0:	46bd      	mov	sp, r7
  80078d2:	f85d 7b04 	ldr.w	r7, [sp], #4
  80078d6:	4770      	bx	lr
- 80078d8:	20000038 	.word	0x20000038
+ 80078d8:	20000034 	.word	0x20000034
 
 080078dc <UTIL_SEQ_ResumeTask>:
   UTIL_SEQ_EXIT_CRITICAL_SECTION( );
@@ -21101,7 +21101,7 @@ void UTIL_SEQ_ResumeTask( UTIL_SEQ_bm_t TaskId_bm )
  8007910:	f85d 7b04 	ldr.w	r7, [sp], #4
  8007914:	4770      	bx	lr
  8007916:	bf00      	nop
- 8007918:	20000038 	.word	0x20000038
+ 8007918:	20000034 	.word	0x20000034
 
 0800791c <UTIL_SEQ_SetEvt>:
 
@@ -21148,7 +21148,7 @@ void UTIL_SEQ_SetEvt( UTIL_SEQ_bm_t EvtId_bm )
  8007950:	f85d 7b04 	ldr.w	r7, [sp], #4
  8007954:	4770      	bx	lr
  8007956:	bf00      	nop
- 8007958:	20000518 	.word	0x20000518
+ 8007958:	20000514 	.word	0x20000514
 
 0800795c <UTIL_SEQ_WaitEvt>:
 
@@ -21269,9 +21269,9 @@ void UTIL_SEQ_WaitEvt(UTIL_SEQ_bm_t EvtId_bm)
  80079de:	3720      	adds	r7, #32
  80079e0:	46bd      	mov	sp, r7
  80079e2:	bd80      	pop	{r7, pc}
- 80079e4:	20000520 	.word	0x20000520
- 80079e8:	2000051c 	.word	0x2000051c
- 80079ec:	20000518 	.word	0x20000518
+ 80079e4:	2000051c 	.word	0x2000051c
+ 80079e8:	20000518 	.word	0x20000518
+ 80079ec:	20000514 	.word	0x20000514
 
 080079f0 <UTIL_SEQ_PreIdle>:
 {

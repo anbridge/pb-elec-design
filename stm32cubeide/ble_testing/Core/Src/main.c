@@ -71,8 +71,9 @@ char temp_buff[128] = {};
   * @brief  The application entry point.
   * @retval int
   */
-uint8_t buf22[512];
 uint8_t chnl = 0x01;
+uint8_t buf22[512];
+
 int main(void)
 {
 
@@ -119,36 +120,34 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
-  {
-    /* USER CODE END WHILE */
-    MX_APPE_Process();
-    if(!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6)){
-		  buf22[0] = chnl;
-		  buf22[1] = 0x00;
-    	HAL_I2C_Master_Transmit(&hi2c1, 0x70 << 1, &chnl, 1, 1000);
-    	HAL_StatusTypeDef result;
-    	for (uint8_t i = 0; i<128; i++)
-    		  {
-    			  result = HAL_I2C_IsDeviceReady(&hi2c1, (uint16_t) (i<<1), 2, 2);
-    			  if (result == HAL_OK && i != 0x70)
-    			  {
+   {
+ 	    /* USER CODE END WHILE */
+ 	    MX_APPE_Process();
+ 	    if(!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6)){
+ 			  buf22[0] = chnl;
+ 			  buf22[1] = 0x00;
+ 	    	HAL_I2C_Master_Transmit(&hi2c1, 0x70 << 1, &chnl, 1, 1000);
+ 	    	HAL_StatusTypeDef result;
+ 	    	for (uint8_t i = 0; i<128; i++)
+ 	    		  {
+ 	    			  result = HAL_I2C_IsDeviceReady(&hi2c1, (uint16_t) (i<<1), 2, 2);
+ 	    			  if (result == HAL_OK && i != 0x70)
+ 	    			  {
 
-    				  buf22[2] = 0x00;
-    				  buf22[3] = 0xFF & i;
+ 	    				  buf22[2] = 0x00;
+ 	    				  buf22[3] = 0xFF & i;
 
-    			  }
-    		  }
-    	Custom_STM_App_Update_Char(0, (uint8_t *)buf22);
-    	HAL_Delay(250);
-    	chnl = chnl << 1;
-    	if (chnl == 0)chnl = 1;
+ 	    			  }
+ 	    		  }
+ 	    	Custom_STM_App_Update_Char(0, (uint8_t *)buf22);
+ 	    	HAL_Delay(250);
+ 	    	chnl = chnl << 1;
+ 	    	if (chnl == 0)chnl = 1;
+ 	    }
+   }
+   /* USER CODE END 3 */
+ }
 
-    }
-
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
-}
 
 /**
   * @brief System Clock Configuration

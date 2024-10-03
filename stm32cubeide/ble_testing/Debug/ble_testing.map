@@ -10344,7 +10344,7 @@ LOAD /opt/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-
                 [!provide]                        PROVIDE (__fini_array_end = .)
                 0x08007d84                        _sidata = LOADADDR (.data)
 
-.data           0x20000008       0x38 load address 0x08007d84
+.data           0x20000008       0x34 load address 0x08007d84
                 0x20000008                        . = ALIGN (0x4)
                 0x20000008                        _sdata = .
  *(.data)
@@ -10378,146 +10378,145 @@ LOAD /opt/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-
                 0x2000001c                uwTickFreq
  *fill*         0x2000001d        0x3 
  .data.a_AdvData
-                0x20000020       0x14 ./STM32_WPAN/App/app_ble.o
+                0x20000020       0x10 ./STM32_WPAN/App/app_ble.o
                 0x20000020                a_AdvData
  .data.SizeInfo_C
-                0x20000034        0x2 ./STM32_WPAN/App/custom_stm.o
-                0x20000034                SizeInfo_C
- *fill*         0x20000036        0x2 
+                0x20000030        0x2 ./STM32_WPAN/App/custom_stm.o
+                0x20000030                SizeInfo_C
+ *fill*         0x20000032        0x2 
  .data.TaskMask
-                0x20000038        0x4 ./Utilities/sequencer/stm32_seq.o
+                0x20000034        0x4 ./Utilities/sequencer/stm32_seq.o
  .data.SuperMask
-                0x2000003c        0x4 ./Utilities/sequencer/stm32_seq.o
+                0x20000038        0x4 ./Utilities/sequencer/stm32_seq.o
  *(.RamFunc)
  *(.RamFunc*)
-                0x20000040                        . = ALIGN (0x4)
-                0x20000040                        _edata = .
+                0x2000003c                        . = ALIGN (0x4)
+                0x2000003c                        _edata = .
 
-.igot.plt       0x20000040        0x0 load address 0x08007dbc
- .igot.plt      0x20000040        0x0 /opt/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.linux64_1.0.200.202406132123/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+.igot.plt       0x2000003c        0x0 load address 0x08007db8
+ .igot.plt      0x2000003c        0x0 /opt/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.linux64_1.0.200.202406132123/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard/crtbegin.o
 
 BLE_DRIVER_CONTEXT
-                0x20000040       0x35 load address 0x08007dbc
+                0x2000003c       0x35 load address 0x08007db8
  BLE_DRIVER_CONTEXT
-                0x20000040       0x21 ./Middlewares/ST/STM32_WPAN/ble/svc/Src/svc_ctl.o
-                0x20000040                SVCCTL_EvtHandler
-                0x20000060                SVCCTL_CltHandler
- *fill*         0x20000061        0x3 
+                0x2000003c       0x21 ./Middlewares/ST/STM32_WPAN/ble/svc/Src/svc_ctl.o
+                0x2000003c                SVCCTL_EvtHandler
+                0x2000005c                SVCCTL_CltHandler
+ *fill*         0x2000005d        0x3 
  BLE_DRIVER_CONTEXT
-                0x20000064       0x11 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.o
-                0x20000074                UserEventFlow
+                0x20000060       0x11 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.o
+                0x20000070                UserEventFlow
 
 SYSTEM_DRIVER_CONTEXT
-                0x20000078       0x11 load address 0x08007df1
+                0x20000074       0x11 load address 0x08007ded
  SYSTEM_DRIVER_CONTEXT
-                0x20000078       0x11 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/shci_tl.o
-                0x20000088                SHCI_TL_UserEventFlow
-                0x2000008c                        . = ALIGN (0x4)
+                0x20000074       0x11 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/shci_tl.o
+                0x20000084                SHCI_TL_UserEventFlow
+                0x20000088                        . = ALIGN (0x4)
 
-.bss            0x2000008c      0x528 load address 0x08007e02
-                0x2000008c                        _sbss = .
-                0x2000008c                        __bss_start__ = _sbss
+.bss            0x20000088      0x528 load address 0x08007dfe
+                0x20000088                        _sbss = .
+                0x20000088                        __bss_start__ = _sbss
  *(.bss)
- .bss           0x2000008c       0x1c /opt/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.linux64_1.0.200.202406132123/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+ .bss           0x20000088       0x1c /opt/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.linux64_1.0.200.202406132123/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard/crtbegin.o
  *(.bss*)
  .bss.aTimerContext
-                0x200000a8       0x90 ./Core/Src/hw_timerserver.o
+                0x200000a4       0x90 ./Core/Src/hw_timerserver.o
  .bss.CurrentRunningTimerID
-                0x20000138        0x1 ./Core/Src/hw_timerserver.o
+                0x20000134        0x1 ./Core/Src/hw_timerserver.o
  .bss.PreviousRunningTimerID
-                0x20000139        0x1 ./Core/Src/hw_timerserver.o
- *fill*         0x2000013a        0x2 
+                0x20000135        0x1 ./Core/Src/hw_timerserver.o
+ *fill*         0x20000136        0x2 
  .bss.SSRValueOnLastSetup
-                0x2000013c        0x4 ./Core/Src/hw_timerserver.o
+                0x20000138        0x4 ./Core/Src/hw_timerserver.o
  .bss.WakeupTimerLimitation
-                0x20000140        0x1 ./Core/Src/hw_timerserver.o
+                0x2000013c        0x1 ./Core/Src/hw_timerserver.o
  .bss.WakeupTimerDivider
-                0x20000141        0x1 ./Core/Src/hw_timerserver.o
+                0x2000013d        0x1 ./Core/Src/hw_timerserver.o
  .bss.AsynchPrescalerUserConfig
-                0x20000142        0x1 ./Core/Src/hw_timerserver.o
- *fill*         0x20000143        0x1 
+                0x2000013e        0x1 ./Core/Src/hw_timerserver.o
+ *fill*         0x2000013f        0x1 
  .bss.SynchPrescalerUserConfig
-                0x20000144        0x2 ./Core/Src/hw_timerserver.o
+                0x20000140        0x2 ./Core/Src/hw_timerserver.o
  .bss.MaxWakeupTimerSetup
-                0x20000146        0x2 ./Core/Src/hw_timerserver.o
- .bss.hi2c1     0x20000148       0x54 ./Core/Src/main.o
-                0x20000148                hi2c1
- .bss.hipcc     0x2000019c       0x3c ./Core/Src/main.o
-                0x2000019c                hipcc
- .bss.hrtc      0x200001d8       0x24 ./Core/Src/main.o
-                0x200001d8                hrtc
- .bss.buf22     0x200001fc      0x200 ./Core/Src/main.o
-                0x200001fc                buf22
- .bss.uwTick    0x200003fc        0x4 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal.o
-                0x200003fc                uwTick
+                0x20000142        0x2 ./Core/Src/hw_timerserver.o
+ .bss.hi2c1     0x20000144       0x54 ./Core/Src/main.o
+                0x20000144                hi2c1
+ .bss.hipcc     0x20000198       0x3c ./Core/Src/main.o
+                0x20000198                hipcc
+ .bss.hrtc      0x200001d4       0x24 ./Core/Src/main.o
+                0x200001d4                hrtc
+ .bss.buf22     0x200001f8      0x200 ./Core/Src/main.o
+                0x200001f8                buf22
+ .bss.uwTick    0x200003f8        0x4 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal.o
+                0x200003f8                uwTick
  .bss.hciContext
-                0x20000400       0x20 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.o
+                0x200003fc       0x20 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.o
  .bss.HciCmdEventQueue
-                0x20000420        0x8 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.o
+                0x2000041c        0x8 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.o
  .bss.StatusNotCallBackFunction
-                0x20000428        0x4 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.o
+                0x20000424        0x4 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.o
  .bss.CmdRspStatusFlag
-                0x2000042c        0x1 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.o
- *fill*         0x2000042d        0x3 
+                0x20000428        0x1 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.o
+ *fill*         0x20000429        0x3 
  .bss.shciContext
-                0x20000430       0x20 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/shci_tl.o
+                0x2000042c       0x20 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/shci_tl.o
  .bss.StatusNotCallBackFunction
-                0x20000450        0x4 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/shci_tl.o
+                0x2000044c        0x4 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/shci_tl.o
  .bss.CmdRspStatusFlag
-                0x20000454        0x1 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/shci_tl.o
- *fill*         0x20000455        0x3 
+                0x20000450        0x1 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/shci_tl.o
+ *fill*         0x20000451        0x3 
  .bss.LocalFreeBufQueue
-                0x20000458        0x8 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/tl_mbox.o
+                0x20000454        0x8 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/tl_mbox.o
  .bss.BLE_IoBusEvtCallBackFunction
-                0x20000460        0x4 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/tl_mbox.o
+                0x2000045c        0x4 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/tl_mbox.o
  .bss.BLE_IoBusAclDataTxAck
-                0x20000464        0x4 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/tl_mbox.o
+                0x20000460        0x4 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/tl_mbox.o
  .bss.SYS_CMD_IoBusCallBackFunction
-                0x20000468        0x4 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/tl_mbox.o
+                0x20000464        0x4 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/tl_mbox.o
  .bss.SYS_EVT_IoBusCallBackFunction
-                0x2000046c        0x4 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/tl_mbox.o
+                0x20000468        0x4 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/tl_mbox.o
  .bss.p_mem_manager_table.0
-                0x20000470        0x4 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/tl_mbox.o
+                0x2000046c        0x4 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/tl_mbox.o
  .bss.a_BdAddrUdn
-                0x20000474        0x6 ./STM32_WPAN/App/app_ble.o
- *fill*         0x2000047a        0x2 
+                0x20000470        0x6 ./STM32_WPAN/App/app_ble.o
+ *fill*         0x20000476        0x2 
  .bss.BleApplicationContext
-                0x2000047c       0x84 ./STM32_WPAN/App/app_ble.o
+                0x20000478       0x84 ./STM32_WPAN/App/app_ble.o
  .bss.HandleNotification
-                0x20000500        0x4 ./STM32_WPAN/App/app_ble.o
-                0x20000500                HandleNotification
+                0x200004fc        0x4 ./STM32_WPAN/App/app_ble.o
+                0x200004fc                HandleNotification
  .bss.CustomContext
-                0x20000504        0x4 ./STM32_WPAN/App/custom_stm.o
+                0x20000500        0x4 ./STM32_WPAN/App/custom_stm.o
  .bss.FreeBufCb
-                0x20000508        0x4 ./STM32_WPAN/Target/hw_ipcc.o
+                0x20000504        0x4 ./STM32_WPAN/Target/hw_ipcc.o
  .bss.StopModeDisable
-                0x2000050c        0x4 ./Utilities/lpm/tiny_lpm/stm32_lpm.o
+                0x20000508        0x4 ./Utilities/lpm/tiny_lpm/stm32_lpm.o
  .bss.OffModeDisable
-                0x20000510        0x4 ./Utilities/lpm/tiny_lpm/stm32_lpm.o
- .bss.TaskSet   0x20000514        0x4 ./Utilities/sequencer/stm32_seq.o
- .bss.EvtSet    0x20000518        0x4 ./Utilities/sequencer/stm32_seq.o
+                0x2000050c        0x4 ./Utilities/lpm/tiny_lpm/stm32_lpm.o
+ .bss.TaskSet   0x20000510        0x4 ./Utilities/sequencer/stm32_seq.o
+ .bss.EvtSet    0x20000514        0x4 ./Utilities/sequencer/stm32_seq.o
  .bss.EvtWaited
-                0x2000051c        0x4 ./Utilities/sequencer/stm32_seq.o
+                0x20000518        0x4 ./Utilities/sequencer/stm32_seq.o
  .bss.CurrentTaskIdx
-                0x20000520        0x4 ./Utilities/sequencer/stm32_seq.o
- .bss.TaskCb    0x20000524       0x80 ./Utilities/sequencer/stm32_seq.o
- .bss.TaskPrio  0x200005a4       0x10 ./Utilities/sequencer/stm32_seq.o
+                0x2000051c        0x4 ./Utilities/sequencer/stm32_seq.o
+ .bss.TaskCb    0x20000520       0x80 ./Utilities/sequencer/stm32_seq.o
+ .bss.TaskPrio  0x200005a0       0x10 ./Utilities/sequencer/stm32_seq.o
  *(COMMON)
-                0x200005b4                        . = ALIGN (0x4)
-                0x200005b4                        _ebss = .
-                0x200005b4                        __bss_end__ = _ebss
+                0x200005b0                        . = ALIGN (0x4)
+                0x200005b0                        _ebss = .
+                0x200005b0                        __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x200005b4      0x604 load address 0x08007e02
-                0x200005b8                        . = ALIGN (0x8)
- *fill*         0x200005b4        0x4 
+                0x200005b0      0x600 load address 0x08007dfe
+                0x200005b0                        . = ALIGN (0x8)
                 [!provide]                        PROVIDE (end = .)
-                0x200005b8                        PROVIDE (_end = .)
-                0x200007b8                        . = (. + _Min_Heap_Size)
- *fill*         0x200005b8      0x200 
-                0x20000bb8                        . = (. + _Min_Stack_Size)
- *fill*         0x200007b8      0x400 
-                0x20000bb8                        . = ALIGN (0x8)
+                0x200005b0                        PROVIDE (_end = .)
+                0x200007b0                        . = (. + _Min_Heap_Size)
+ *fill*         0x200005b0      0x200 
+                0x20000bb0                        . = (. + _Min_Stack_Size)
+ *fill*         0x200007b0      0x400 
+                0x20000bb0                        . = ALIGN (0x8)
 
 /DISCARD/
  libc.a(*)
@@ -10634,9 +10633,9 @@ MB_MEM1         0x20030028      0x1bb
  *(MB_MEM1)
  MB_MEM1        0x20030028       0xb0 ./Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/tl_mbox.o
  MB_MEM1        0x200300d8      0x10b ./STM32_WPAN/App/app_ble.o
-                0x08007e02                        _siMB_MEM2 = LOADADDR (.MB_MEM2)
+                0x08007dfe                        _siMB_MEM2 = LOADADDR (.MB_MEM2)
 
-.MB_MEM2        0x200301e4      0x883 load address 0x08007e02
+.MB_MEM2        0x200301e4      0x883 load address 0x08007dfe
                 0x200301e4                        _sMB_MEM2 = .
  *(MB_MEM2)
  MB_MEM2        0x200301e4       0x12 ./Core/Src/app_debug.o

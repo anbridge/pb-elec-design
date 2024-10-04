@@ -2966,7 +2966,7 @@
 		(sheetname "Root")
 		(sheetfile "ble_mcu_test_board.kicad_sch")
 		(zone_connect 2)
-		(attr smd exclude_from_pos_files exclude_from_bom)
+		(attr smd exclude_from_pos_files)
 		(net_tie_pad_groups "1")
 		(fp_rect
 			(start 0 -0.25)

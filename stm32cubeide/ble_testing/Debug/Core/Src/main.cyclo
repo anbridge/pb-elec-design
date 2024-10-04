@@ -1,0 +1,10 @@
+../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_bus.h:539:22:LL_AHB2_GRP1_EnableClock	1
+../Core/Src/main.c:77:5:main	6
+../Core/Src/main.c:156:6:SystemClock_Config	3
+../Core/Src/main.c:196:6:PeriphCommonClock_Config	2
+../Core/Src/main.c:215:13:MX_I2C1_Init	4
+../Core/Src/main.c:263:13:MX_IPCC_Init	2
+../Core/Src/main.c:289:13:MX_RF_Init	1
+../Core/Src/main.c:310:13:MX_RTC_Init	3
+../Core/Src/main.c:352:13:MX_GPIO_Init	1
+../Core/Src/main.c:380:6:Error_Handler	1

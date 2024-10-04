@@ -239,7 +239,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "imu_rib.kicad_pro",
+    "filename": "POstureBestLSM9DS1.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -384,7 +384,7 @@
   },
   "sheets": [
     [
-      "ab36c0e3-095d-4714-830b-404fd8916e01",
+      "0d555fac-2c27-4720-a6de-620e631c8ddf",
       "Root"
     ]
   ],

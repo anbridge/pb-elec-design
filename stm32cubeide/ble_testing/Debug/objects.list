@@ -1,3 +1,4 @@
+"./Core/Src/ICM_20948_C.o"
 "./Core/Src/app_debug.o"
 "./Core/Src/app_entry.o"
 "./Core/Src/hw_timerserver.o"

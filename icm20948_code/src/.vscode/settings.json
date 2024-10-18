@@ -1,0 +1,23 @@
+{
+    "files.associations": {
+        "icm20948_img.dmp3a.h": "c",
+        "cstdint": "c",
+        "format": "cpp",
+        "*.tcc": "cpp",
+        "fstream": "cpp",
+        "ostream": "cpp",
+        "sstream": "cpp",
+        "streambuf": "cpp",
+        "*.rh": "cpp",
+        "exception": "cpp",
+        "memory_resource": "cpp",
+        "iosfwd": "cpp",
+        "new": "cpp",
+        "shared_mutex": "cpp",
+        "stop_token": "cpp",
+        "*.inc": "cpp",
+        "icm_20948_registers.h": "c",
+        "chrono": "c",
+        "functional": "c"
+    }
+}

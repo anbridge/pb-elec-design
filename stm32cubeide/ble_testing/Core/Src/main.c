@@ -17,7 +17,11 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include <math.h>
+
 #include "main.h"
+#include "ICM_20948_INV.h"
+#include "pb_helper.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -117,33 +121,49 @@ int main(void)
   /* Init code for STM32_WPAN */
   MX_APPE_Init();
 
+  set_i2c_mux_index(&hi2c1, 4);
+  icm20948_set_i2c_bus(&hi2c1);
+  if(icm20948_initialize_DMP())return;
+  if(icm20948_enable_DMP_sensor(INV_ICM20948_SENSOR_ORIENTATION, 1))return;
+  if(icm20948_set_DMP_sensor_period(DMP_ODR_Reg_Quat9, 0))return;
+  icm20948_enable_FIFO(true);
+  icm20948_enable_DMP(true);
+  icm20948_reset_FIFO();
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  icm_20948_DMP_data_t dmp_data;
+  HAL_Delay(1000);
+  icm20948_reset_DMP();
   while (1)
    {
  	    /* USER CODE END WHILE */
  	    MX_APPE_Process();
- 	    if(!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6)){
- 			  buf22[0] = chnl;
- 			  buf22[1] = 0x00;
- 	    	HAL_I2C_Master_Transmit(&hi2c1, 0x70 << 1, &chnl, 1, 1000);
- 	    	HAL_StatusTypeDef result;
- 	    	for (uint8_t i = 0; i<128; i++)
- 	    		  {
- 	    			  result = HAL_I2C_IsDeviceReady(&hi2c1, (uint16_t) (i<<1), 2, 2);
- 	    			  if (result == HAL_OK && i != 0x70)
- 	    			  {
 
- 	    				  buf22[2] = 0x00;
- 	    				  buf22[3] = 0xFF & i;
+		int8_t result = icm20948_read_DMP_data(&dmp_data);
+		if ((dmp_data.header & DMP_header_bitmap_Quat9) > 0) // We have asked for orientation data so we should receive Quat9
+		{
+		  // Q0 value is computed from this equation: Q0^2 + Q1^2 + Q2^2 + Q3^2 = 1.
+		  // In case of drift, the sum will not add to 1, therefore, quaternion data need to be corrected with right bias values.
+		  // The quaternion data is scaled by 2^30.
 
- 	    			  }
- 	    		  }
- 	    	Custom_STM_App_Update_Char(0, (uint8_t *)buf22);
- 	    	HAL_Delay(250);
- 	    	chnl = chnl << 1;
- 	    	if (chnl == 0)chnl = 1;
- 	    }
+		  //SERIAL_PORT.printf("Quat9 data is: Q1:%ld Q2:%ld Q3:%ld Accuracy:%d\r\n", data.Quat9.Data.Q1, data.Quat9.Data.Q2, data.Quat9.Data.Q3, data.Quat9.Data.Accuracy);
+
+		  // Scale to +/- 1
+		  double q1 = ((double)dmp_data.Quat9.Data.Q1) / 1073741824.0; // Convert to double. Divide by 2^30
+		  double q2 = ((double)dmp_data.Quat9.Data.Q2) / 1073741824.0; // Convert to double. Divide by 2^30
+		  double q3 = ((double)dmp_data.Quat9.Data.Q3) / 1073741824.0; // Convert to double. Divide by 2^30
+		  double q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
+		  put_double_in_buffer(q0, buf22, sizeof(buf22), 0);
+		  put_double_in_buffer(q1, buf22, sizeof(buf22), 8);
+		  put_double_in_buffer(q2, buf22, sizeof(buf22), 16);
+		  put_double_in_buffer(q3, buf22, sizeof(buf22), 24);
+		  Custom_STM_App_Update_Char(0, (uint8_t *)buf22);
+		}
+		if(result != ICM_20948_Stat_FIFOMoreDataAvail)
+			HAL_Delay(10);
+
+
    }
    /* USER CODE END 3 */
  }

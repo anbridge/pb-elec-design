@@ -1,23 +1,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "util/ICM_20948_REGISTERS.h"
-#include "util/ICM_20948_ENUMERATIONS.h"
-
-// requisite constants + information
-
-    //registers
-#define DMP_LOAD_START 0x90
-#define AGB0_REG_MEM_START_ADDR 0x7C // Hmm, Invensense thought they were sneaky not listing these locations on the datasheet...
-#define AGB0_REG_MEM_R_W 0x7D     // These three locations seem to be able to access some memory within the device
-#define AGB0_REG_MEM_BANK_SEL 0x7E   // And that location is also where the DMP image gets loaded
-#define REG_BANK_SEL 0x7F
-
-    //misc
-#define DMP_START_ADDRESS ((unsigned short)0x1000) //default program start address
-#define ICM_20948_I2C_ADDR 0x68
-#define MAX_SERIAL_R_W 16 //16 bytes max serial read/write for ICM-20948
-
+#include "icm_20948_inv.h"
 
 const uint8_t dmp3_image[] = {
 #include "util/icm20948_img.dmp3a.h"
@@ -26,10 +10,10 @@ const uint8_t dmp3_image[] = {
 
 //icm_20948_load_firmware(dmp3_image, sizeof(dmp3_image), DMP_LOAD_START);
 
-int icm_20948_load_firmware(const unsigned char *data_start, unsigned short size_start, unsigned short load_addr)
+int icm20948_load_firmware(const unsigned char *data_start, unsigned short size_start, unsigned short load_addr)
 {
   int write_size;
-  int result = 0; // OK
+  int 0; // OK
   unsigned short memaddr;
   const unsigned char *data;
   unsigned short size;
@@ -43,13 +27,13 @@ int icm_20948_load_firmware(const unsigned char *data_start, unsigned short size
   if (pdev->_firmware_loaded)
     return ICM_20948_Stat_Ok; // Bail with no error if firmware is already loaded
 
-  result = ICM_20948_sleep(pdev, false); // Make sure chip is awake
+  ICM_20948_sleep(pdev, false); // Make sure chip is awake
   if (result != ICM_20948_Stat_Ok)
   {
     return result;
   }
 
-  result = ICM_20948_low_power(pdev, false); // Make sure chip is not in low power state
+  ICM_20948_low_power(pdev, false); // Make sure chip is not in low power state
   if (result != ICM_20948_Stat_Ok)
   {
     return result;
@@ -77,7 +61,7 @@ int icm_20948_load_firmware(const unsigned char *data_start, unsigned short size
       //...should it be instead set to the rest of the chunk?
       write_size = 0x100 - (memaddr & 0xff);
     }
-    result = icm20948_write_mem(memaddr, write_size, (unsigned char *)data);
+    icm20948_write_mem(memaddr, write_size, (unsigned char *)data);
 
     data += write_size;
     size -= write_size;
@@ -102,9 +86,9 @@ int icm_20948_load_firmware(const unsigned char *data_start, unsigned short size
       //...should it be instead set to the rest of the chunk?
       write_size = 0x100 - (memaddr & 0xff);
     }
-    result = icm20948_read_mem(memaddr, write_size, data_cmp);
-    if (result != ICM_20948_Stat_Ok)
-      flag++;                               // Error, DMP not written correctly
+    icm20948_read_mem(memaddr, write_size, data_cmp);
+    //if (result != ICM_20948_Stat_Ok)
+    //  flag++;                               // Error, DMP not written correctly
 
     if (memcmp(data_cmp, data, write_size)) // Compare the data
       return -1;
@@ -112,119 +96,13 @@ int icm_20948_load_firmware(const unsigned char *data_start, unsigned short size
     size -= write_size;
     memaddr += write_size;
   }
-
+  /*
   //Enable LP_EN since we disabled it at begining of this function.
-  result = ICM_20948_low_power(pdev, true); // Put chip into low power state
+  ICM_20948_low_power(pdev, true); // Put chip into low power state
   if (result != ICM_20948_Stat_Ok)
     return result;
-
-  return result;
-}
-
-/**
-*  @brief       Write data to a register in DMP memory
-*  @param[in]   DMP memory address
-*  @param[in]   number of byte to be written
-*  @param[out]  output data from the register
-*  @return     0 if successful.
-*/
-int icm20948_write_mem(unsigned short reg, unsigned int length, const unsigned char *data)
-{
-    int result = 0;
-  unsigned int bytesWritten = 0;
-  unsigned int thisLen;
-  unsigned char lBankSelected;
-  unsigned char lStartAddrSelected;
-
-  if (!data)
-  {
-    return 1; // nodata
-  }
-
-  icm20948_set_user_bank(0); // set user bank (0 through 3) to 0
-
-    //set mem bank
-  lBankSelected = (reg >> 8);
-  HAL_I2C_Mem_Write(&hi2c1, ICM_20948_I2C_ADDR, AGB0_REG_MEM_BANK_SEL, I2C_MEMADD_SIZE_8BIT, &lBankSelected, 1, 1000);
-  //result = ICM_20948_execute_w(pdev, AGB0_REG_MEM_BANK_SEL, &lBankSelected, 1);
-
-  while (bytesWritten < length)
-  {
-    lStartAddrSelected = (reg & 0xff);
-
-    /* Sets the starting read or write address for the selected memory, inside of the selected page (see MEM_SEL Register).
-           Contents are changed after read or write of the selected memory.
-           This register must be written prior to each access to initialize the register to the proper starting address.
-           The address will auto increment during burst transactions.  Two consecutive bursts without re-initializing the start address would skip one address. */
-
-    HAL_I2C_Mem_Write(&hi2c1, ICM_20948_I2C_ADDR, AGB0_REG_MEM_START_ADDR, I2C_MEMADD_SIZE_8BIT, &lStartAddrSelected, 1, 1000);
-    //result = ICM_20948_execute_w(pdev, AGB0_REG_MEM_START_ADDR, &lStartAddrSelected, 1);
-
-
-    if (length - bytesWritten <= MAX_SERIAL_R_W)
-      thisLen = length - bytesWritten;
-    else
-      thisLen = MAX_SERIAL_R_W;
-
-    /* Write data */
-
-    HAL_I2C_Mem_Write(&hi2c1, ICM_20948_I2C_ADDR, AGB0_REG_MEM_R_W, I2C_MEMADD_SIZE_8BIT, (uint8_t *)&data[bytesWritten], thisLen, 1000);
-    //result = ICM_20948_execute_w(pdev, AGB0_REG_MEM_R_W, (uint8_t *)&data[bytesWritten], thisLen);
-
-    bytesWritten += thisLen;
-    reg += thisLen;
-  }
-
-  return result;
-}
-
-/**
-*  @brief      Read data from a register in DMP memory
-*  @param[in]  DMP memory address
-*  @param[in]  number of byte to be read
-*  @param[in]  input data from the register
-*  @return     0 if successful.
-*/
-int icm20948_read_mem(unsigned short reg, unsigned int length, unsigned char *data)
-{
-  int result = 0;
-  unsigned int bytesRead = 0;
-  unsigned int thisLen;
-  unsigned char lBankSelected;
-  unsigned char lStartAddrSelected;
-
-  icm20948_set_user_bank(0); // set user bank (0 through 3) to 0
-
-    //set mem bank
-  lBankSelected = (reg >> 8);
-  HAL_I2C_Mem_Write(&hi2c1, ICM_20948_I2C_ADDR, AGB0_REG_MEM_BANK_SEL, I2C_MEMADD_SIZE_8BIT, &lBankSelected, 1, 1000);
-  //result = ICM_20948_execute_w(pdev, AGB0_REG_MEM_BANK_SEL, &lBankSelected, 1);
-
-
-  while (bytesRead < length)
-  {
-    lStartAddrSelected = (reg & 0xff);
-    /* Sets the starting read or write address for the selected memory, inside of the selected page (see MEM_SEL Register).
-           Contents are changed after read or write of the selected memory.
-           This register must be written prior to each access to initialize the register to the proper starting address.
-           The address will auto increment during burst transactions.  Two consecutive bursts without re-initializing the start address would skip one address. */
-
-    HAL_I2C_Mem_Write(&hi2c1, ICM_20948_I2C_ADDR, AGB0_REG_MEM_START_ADDR, I2C_MEMADD_SIZE_8BIT, &lStartAddrSelected, 1, 1000);
-    //result = ICM_20948_execute_w(pdev, AGB0_REG_MEM_START_ADDR, &lStartAddrSelected, 1);
-
-    if (length - bytesRead <= MAX_SERIAL_R_W)
-      thisLen = length - bytesRead;
-    else
-      thisLen = MAX_SERIAL_R_W;
-
-    /* Read data */
-    HAL_I2C_Mem_Read(&hi2c1, ICM_20948_I2C_ADDR, AGB0_REG_MEM_R_W, I2C_MEMADD_SIZE_8BIT, &data[bytesRead], thisLen, 1000);
-    
-    bytesRead += thisLen;
-    reg += thisLen;
-  }
-
-  return result;
+  */
+  return 0;
 }
 
 // Combine all of the DMP start-up code from the earlier DMP examples
@@ -254,7 +132,7 @@ int initializeDMP(void)
   // false: clear the I2C_SLV0_CTRL I2C_SLV0_REG_DIS (we want to write the register value)
   // true: set the I2C_SLV0_CTRL I2C_SLV0_GRP bit to show the register pairing starts at byte 1+2 (copied from inv_icm20948_resume_akm)
   // true: set the I2C_SLV0_CTRL I2C_SLV0_BYTE_SW to byte-swap the data from the mag (copied from inv_icm20948_resume_akm)
-  i2cControllerConfigurePeripheral(0, MAG_AK09916_I2C_ADDR, AK09916_REG_RSV2, 10, true, true, false, true, true);
+  icm20948_i2c_controller_configure_peripheral(0, MAG_AK09916_I2C_ADDR, AK09916_REG_RSV2, 10, true, true, false, true, true, 0);
   //
   // We also need to set up I2C_SLV1 to do the Single Measurement triggering:
   // 1: use I2C_SLV1
@@ -267,7 +145,7 @@ int initializeDMP(void)
   // false: clear the I2C_SLV0_CTRL I2C_SLV0_GRP bit
   // false: clear the I2C_SLV0_CTRL I2C_SLV0_BYTE_SW bit
   // AK09916_mode_single: tell I2C_SLV1 to write the Single Measurement command each sample
-  i2cControllerConfigurePeripheral(1, MAG_AK09916_I2C_ADDR, AK09916_REG_CNTL2, 1, false, true, false, false, false, AK09916_mode_single);
+  icm20948_i2c_controller_configure_peripheral(1, MAG_AK09916_I2C_ADDR, AK09916_REG_CNTL2, 1, false, true, false, false, false, AK09916_mode_single);
 
   // Set the I2C Master ODR configuration
   // It is not clear why we need to do this... But it appears to be essential! From the datasheet:
@@ -323,7 +201,7 @@ int initializeDMP(void)
 
   // Enable interrupt for FIFO overflow from FIFOs through INT_ENABLE_2
   // If we see this interrupt, we'll need to reset the FIFO
-  //result = intEnableOverflowFIFO( 0x1F ); if (result > worstResult) worstResult = result; // Enable the interrupt on all FIFOs
+  //intEnableOverflowFIFO( 0x1F ); // Enable the interrupt on all FIFOs
 
   // Turn off what goes into the FIFO through FIFO_EN_1, FIFO_EN_2
   // Stop the peripheral data from being written to the FIFO by writing zero to FIFO_EN_1
@@ -334,10 +212,10 @@ int initializeDMP(void)
   HAL_I2C_Mem_Write(&hi2c1, ICM_20948_I2C_ADDR, AGB0_REG_FIFO_EN_2, I2C_MEMADD_SIZE_8BIT, &zero, 1, 1000);
 
   // Turn off data ready interrupt through INT_ENABLE_1
-  result = intEnableRawDataReady(false); if (result > worstResult) worstResult = result;
+  icm20948_int_enable_raw_data_ready(false);
 
   // Reset FIFO through FIFO_RST
-  result = icm20948_reset_FIFO(); if (result > worstResult) worstResult = result;
+  icm20948_reset_FIFO(); 
 
   // Set gyro sample rate divider with GYRO_SMPLRT_DIV
   // Set accel sample rate divider with ACCEL_SMPLRT_DIV_2
@@ -351,32 +229,32 @@ int initializeDMP(void)
   icm20948_set_sample_rate((ICM_20948_Internal_Acc | ICM_20948_Internal_Gyr), mySmplrt);
 
   // Setup DMP start address through PRGM_STRT_ADDRH/PRGM_STRT_ADDRL
-  result = setDMPstartAddress(); if (result > worstResult) worstResult = result; // Defaults to DMP_START_ADDRESS
+  icm20948_set_DMP_start_address(DMP_START_ADDRESS);
 
   // Now load the DMP firmware
-  icm_20948_load_firmware(dmp3_image, sizeof(dmp3_image), DMP_LOAD_START);
+  icm20948_load_firmware(dmp3_image, sizeof(dmp3_image), DMP_LOAD_START);
 
   // Write the 2 byte Firmware Start Value to ICM PRGM_STRT_ADDRH/PRGM_STRT_ADDRL
-  result = setDMPstartAddress(); if (result > worstResult) worstResult = result; // Defaults to DMP_START_ADDRESS
+  icm20948_set_DMP_start_address(DMP_START_ADDRESS); 
 
   // Set the Hardware Fix Disable register to 0x48
-  icm20948_set_user_bank(0); if (result > worstResult) worstResult = result; // Select Bank 0
+  icm20948_set_user_bank(0);
   uint8_t fix = 0x48;
-  result = write(AGB0_REG_HW_FIX_DISABLE, &fix, 1); if (result > worstResult) worstResult = result;
+  HAL_I2C_Mem_Write(&hi2c1, ICM_20948_I2C_ADDR, AGB0_REG_HW_FIX_DISABLE, I2C_MEMADD_SIZE_8BIT, &fix, 1, 1000); 
 
   // Set the Single FIFO Priority Select register to 0xE4
   icm20948_set_user_bank(0);
   uint8_t fifoPrio = 0xE4;
-  result = write(AGB0_REG_SINGLE_FIFO_PRIORITY_SEL, &fifoPrio, 1); if (result > worstResult) worstResult = result;
+  HAL_I2C_Mem_Write(&hi2c1, ICM_20948_I2C_ADDR, AGB0_REG_SINGLE_FIFO_PRIORITY_SEL, I2C_MEMADD_SIZE_8BIT, &fifoPrio, 1, 1000); 
 
   // Configure Accel scaling to DMP
   // The DMP scales accel raw data internally to align 1g as 2^25
   // In order to align internal accel raw data 2^25 = 1g write 0x04000000 when FSR is 4g
   const unsigned char accScale[4] = {0x04, 0x00, 0x00, 0x00};
-  result = writeDMPmems(ACC_SCALE, 4, &accScale[0]); if (result > worstResult) worstResult = result; // Write accScale to ACC_SCALE DMP register
+  icm20948_write_mem(ACC_SCALE, 4, &accScale[0]); 
   // In order to output hardware unit data as configured FSR write 0x00040000 when FSR is 4g
   const unsigned char accScale2[4] = {0x00, 0x04, 0x00, 0x00};
-  result = writeDMPmems(ACC_SCALE2, 4, &accScale2[0]); if (result > worstResult) worstResult = result; // Write accScale2 to ACC_SCALE2 DMP register
+  icm20948_write_mem(ACC_SCALE2, 4, &accScale2[0]);
 
   // Configure Compass mount matrix and scale to DMP
   // The mount matrix write to DMP register is used to align the compass axes with accel/gyro.
@@ -390,35 +268,35 @@ int initializeDMP(void)
   const unsigned char mountMultiplierZero[4] = {0x00, 0x00, 0x00, 0x00};
   const unsigned char mountMultiplierPlus[4] = {0x09, 0x99, 0x99, 0x99};  // Value taken from InvenSense Nucleo example
   const unsigned char mountMultiplierMinus[4] = {0xF6, 0x66, 0x66, 0x67}; // Value taken from InvenSense Nucleo example
-  result = writeDMPmems(CPASS_MTX_00, 4, &mountMultiplierPlus[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(CPASS_MTX_01, 4, &mountMultiplierZero[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(CPASS_MTX_02, 4, &mountMultiplierZero[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(CPASS_MTX_10, 4, &mountMultiplierZero[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(CPASS_MTX_11, 4, &mountMultiplierMinus[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(CPASS_MTX_12, 4, &mountMultiplierZero[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(CPASS_MTX_20, 4, &mountMultiplierZero[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(CPASS_MTX_21, 4, &mountMultiplierZero[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(CPASS_MTX_22, 4, &mountMultiplierMinus[0]); if (result > worstResult) worstResult = result;
+  icm20948_write_mem(CPASS_MTX_00, 4, &mountMultiplierPlus[0]);
+  icm20948_write_mem(CPASS_MTX_01, 4, &mountMultiplierZero[0]);
+  icm20948_write_mem(CPASS_MTX_02, 4, &mountMultiplierZero[0]);
+  icm20948_write_mem(CPASS_MTX_10, 4, &mountMultiplierZero[0]);
+  icm20948_write_mem(CPASS_MTX_11, 4, &mountMultiplierMinus[0]);
+  icm20948_write_mem(CPASS_MTX_12, 4, &mountMultiplierZero[0]);
+  icm20948_write_mem(CPASS_MTX_20, 4, &mountMultiplierZero[0]);
+  icm20948_write_mem(CPASS_MTX_21, 4, &mountMultiplierZero[0]);
+  icm20948_write_mem(CPASS_MTX_22, 4, &mountMultiplierMinus[0]);
 
   // Configure the B2S Mounting Matrix
   const unsigned char b2sMountMultiplierZero[4] = {0x00, 0x00, 0x00, 0x00};
   const unsigned char b2sMountMultiplierPlus[4] = {0x40, 0x00, 0x00, 0x00}; // Value taken from InvenSense Nucleo example
-  result = writeDMPmems(B2S_MTX_00, 4, &b2sMountMultiplierPlus[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(B2S_MTX_01, 4, &b2sMountMultiplierZero[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(B2S_MTX_02, 4, &b2sMountMultiplierZero[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(B2S_MTX_10, 4, &b2sMountMultiplierZero[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(B2S_MTX_11, 4, &b2sMountMultiplierPlus[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(B2S_MTX_12, 4, &b2sMountMultiplierZero[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(B2S_MTX_20, 4, &b2sMountMultiplierZero[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(B2S_MTX_21, 4, &b2sMountMultiplierZero[0]); if (result > worstResult) worstResult = result;
-  result = writeDMPmems(B2S_MTX_22, 4, &b2sMountMultiplierPlus[0]); if (result > worstResult) worstResult = result;
+  icm20948_write_mem(B2S_MTX_00, 4, &b2sMountMultiplierPlus[0]);
+  icm20948_write_mem(B2S_MTX_01, 4, &b2sMountMultiplierZero[0]);
+  icm20948_write_mem(B2S_MTX_02, 4, &b2sMountMultiplierZero[0]);
+  icm20948_write_mem(B2S_MTX_10, 4, &b2sMountMultiplierZero[0]);
+  icm20948_write_mem(B2S_MTX_11, 4, &b2sMountMultiplierPlus[0]);
+  icm20948_write_mem(B2S_MTX_12, 4, &b2sMountMultiplierZero[0]);
+  icm20948_write_mem(B2S_MTX_20, 4, &b2sMountMultiplierZero[0]);
+  icm20948_write_mem(B2S_MTX_21, 4, &b2sMountMultiplierZero[0]);
+  icm20948_write_mem(B2S_MTX_22, 4, &b2sMountMultiplierPlus[0]);
 
   // Configure the DMP Gyro Scaling Factor
   // @param[in] gyro_div Value written to GYRO_SMPLRT_DIV register, where
   //            0=1125Hz sample rate, 1=562.5Hz sample rate, ... 4=225Hz sample rate, ...
   //            10=102.2727Hz sample rate, ... etc.
   // @param[in] gyro_level 0=250 dps, 1=500 dps, 2=1000 dps, 3=2000 dps
-  result = setGyroSF(19, 3); if (result > worstResult) worstResult = result; // 19 = 55Hz (see above), 3 = 2000dps (see above)
+  icm20948_set_gyro_sf(19, 3); // 19 = 55Hz (see above), 3 = 2000dps (see above)
 
   // Configure the Gyro full scale
   // 2000dps : 2^28
@@ -426,39 +304,38 @@ int initializeDMP(void)
   //  500dps : 2^26
   //  250dps : 2^25
   const unsigned char gyroFullScale[4] = {0x10, 0x00, 0x00, 0x00}; // 2000dps : 2^28
-  result = writeDMPmems(GYRO_FULLSCALE, 4, &gyroFullScale[0]); if (result > worstResult) worstResult = result;
+  icm20948_write_mem(GYRO_FULLSCALE, 4, &gyroFullScale[0]);
 
   // Configure the Accel Only Gain: 15252014 (225Hz) 30504029 (112Hz) 61117001 (56Hz)
   const unsigned char accelOnlyGain[4] = {0x03, 0xA4, 0x92, 0x49}; // 56Hz
   //const unsigned char accelOnlyGain[4] = {0x00, 0xE8, 0xBA, 0x2E}; // 225Hz
   //const unsigned char accelOnlyGain[4] = {0x01, 0xD1, 0x74, 0x5D}; // 112Hz
-  result = writeDMPmems(ACCEL_ONLY_GAIN, 4, &accelOnlyGain[0]); if (result > worstResult) worstResult = result;
+  icm20948_write_mem(ACCEL_ONLY_GAIN, 4, &accelOnlyGain[0]);
 
   // Configure the Accel Alpha Var: 1026019965 (225Hz) 977872018 (112Hz) 882002213 (56Hz)
   const unsigned char accelAlphaVar[4] = {0x34, 0x92, 0x49, 0x25}; // 56Hz
   //const unsigned char accelAlphaVar[4] = {0x3D, 0x27, 0xD2, 0x7D}; // 225Hz
   //const unsigned char accelAlphaVar[4] = {0x3A, 0x49, 0x24, 0x92}; // 112Hz
-  result = writeDMPmems(ACCEL_ALPHA_VAR, 4, &accelAlphaVar[0]); if (result > worstResult) worstResult = result;
+  icm20948_write_mem(ACCEL_ALPHA_VAR, 4, &accelAlphaVar[0]);
 
   // Configure the Accel A Var: 47721859 (225Hz) 95869806 (112Hz) 191739611 (56Hz)
   const unsigned char accelAVar[4] = {0x0B, 0x6D, 0xB6, 0xDB}; // 56Hz
   //const unsigned char accelAVar[4] = {0x02, 0xD8, 0x2D, 0x83}; // 225Hz
   //const unsigned char accelAVar[4] = {0x05, 0xB6, 0xDB, 0x6E}; // 112Hz
-  result = writeDMPmems(ACCEL_A_VAR, 4, &accelAVar[0]); if (result > worstResult) worstResult = result;
+  icm20948_write_mem(ACCEL_A_VAR, 4, &accelAVar[0]);
 
   // Configure the Accel Cal Rate
   const unsigned char accelCalRate[4] = {0x00, 0x00}; // Value taken from InvenSense Nucleo example
-  result = writeDMPmems(ACCEL_CAL_RATE, 2, &accelCalRate[0]); if (result > worstResult) worstResult = result;
+  icm20948_write_mem(ACCEL_CAL_RATE, 2, &accelCalRate[0]);
 
   // Configure the Compass Time Buffer. The I2C Master ODR Configuration (see above) sets the magnetometer read rate to 68.75Hz.
   // Let's set the Compass Time Buffer to 69 (Hz).
   const unsigned char compassRate[2] = {0x00, 0x45}; // 69Hz
-  result = writeDMPmems(CPASS_TIME_BUFFER, 2, &compassRate[0]); if (result > worstResult) worstResult = result;
+  icm20948_write_mem(CPASS_TIME_BUFFER, 2, &compassRate[0]);
 
   // Enable DMP interrupt
   // This would be the most efficient way of getting the DMP data, instead of polling the FIFO
-  //result = intEnableDMP(true); if (result > worstResult) worstResult = result;
+  //intEnableDMP(true);
 
-
-  return worstResult;
+  return 0;
 }

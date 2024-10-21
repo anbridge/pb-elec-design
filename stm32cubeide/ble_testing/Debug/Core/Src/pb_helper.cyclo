@@ -1,0 +1,2 @@
+../Core/Src/pb_helper.c:3:8:set_i2c_mux_index	2
+../Core/Src/pb_helper.c:10:6:put_double_in_buffer	3

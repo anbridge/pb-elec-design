@@ -1,0 +1,16 @@
+../STM32_WPAN/Target/hw_ipcc.c:189:6:HW_IPCC_Enable	8	static,ignoring_inline_asm
+../STM32_WPAN/Target/hw_ipcc.c:220:6:HW_IPCC_Init	16	static
+../STM32_WPAN/Target/hw_ipcc.c:260:6:HW_IPCC_BLE_Init	0	static
+../STM32_WPAN/Target/hw_ipcc.c:267:6:HW_IPCC_BLE_SendCmd	0	static
+../STM32_WPAN/Target/hw_ipcc.c:283:6:HW_IPCC_BLE_SendAclData	0	static
+../STM32_WPAN/Target/hw_ipcc.c:300:13:HW_IPCC_BLE_AclDataAckNot	0	static
+../STM32_WPAN/Target/hw_ipcc.c:301:13:HW_IPCC_BLE_RxEvtNot	0	static
+../STM32_WPAN/Target/hw_ipcc.c:306:6:HW_IPCC_SYS_Init	0	static
+../STM32_WPAN/Target/hw_ipcc.c:313:6:HW_IPCC_SYS_SendCmd	0	static
+../STM32_WPAN/Target/hw_ipcc.c:339:13:HW_IPCC_SYS_CmdEvtNot	0	static
+../STM32_WPAN/Target/hw_ipcc.c:148:6:HW_IPCC_Tx_Handler	8	static
+../STM32_WPAN/Target/hw_ipcc.c:340:13:HW_IPCC_SYS_EvtNot	0	static
+../STM32_WPAN/Target/hw_ipcc.c:655:6:HW_IPCC_MM_SendFreeBuf	8	static
+../STM32_WPAN/Target/hw_ipcc.c:686:6:HW_IPCC_TRACES_Init	0	static
+../STM32_WPAN/Target/hw_ipcc.c:702:13:HW_IPCC_TRACES_EvtNot	0	static
+../STM32_WPAN/Target/hw_ipcc.c:84:6:HW_IPCC_Rx_Handler	8	static

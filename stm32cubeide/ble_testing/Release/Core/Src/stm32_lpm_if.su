@@ -1,0 +1,9 @@
+../Core/Src/stm32_lpm_if.c:141:6:PWR_ExitOffMode	0	static
+../Core/Src/stm32_lpm_if.c:241:6:PWR_EnterSleepMode	8	static,ignoring_inline_asm
+../Core/Src/stm32_lpm_if.c:218:6:PWR_ExitStopMode	0	static
+../Core/Src/stm32_lpm_if.c:274:6:PWR_ExitSleepMode	0	static
+../Core/Src/stm32_lpm_if.c:412:13:Switch_On_HSI	0	static
+../Core/Src/stm32_lpm_if.c:315:13:EnterLowPower	8	static
+../Core/Src/stm32_lpm_if.c:83:6:PWR_EnterOffMode	8	static
+../Core/Src/stm32_lpm_if.c:170:6:PWR_EnterStopMode	8	static,ignoring_inline_asm
+../Core/Src/stm32_lpm_if.c:291:13:CPUcontextSave	0	static

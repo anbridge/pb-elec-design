@@ -5,15 +5,19 @@
 I2C_HandleTypeDef i2c_bus;
 
 // select user bank 
-void icm20948_set_user_bank(uint8_t bank)
+ICM_20948_Status_e icm20948_set_user_bank(uint8_t bank)
 {
     bank = (bank << 4) & 0x30; // bits 1:0 of bank -> 5:4 of icm bank select register
-    HAL_I2C_Mem_Write(&i2c_bus, ICM_20948_I2C_ADDR, REG_BANK_SEL, I2C_MEMADD_SIZE_8BIT, &bank, 1, 1000);
+    if(HAL_I2C_Mem_Write(&i2c_bus, ICM_20948_I2C_ADDR, REG_BANK_SEL, I2C_MEMADD_SIZE_8BIT, &bank, 1, 1000))
+    	return ICM_20948_Stat_Err;
+    return ICM_20948_Stat_Ok;
 }
 
 const uint8_t dmp3_image[] = {
 #include "icm20948_img.dmp3a.h"
 };
+
+ICM_20948_Status_e status;
 
 // ICM-20948 data is big-endian. We need to make it little-endian when writing into icm_20948_DMP_data_t
 const int DMP_Quat9_Byte_Ordering[icm_20948_DMP_Quat9_Bytes] =
@@ -446,6 +450,41 @@ int8_t icm20948_enable_dlpf(ICM_20948_InternalSensorID_bm sensors, bool enable)
 }
 
 
+ICM_20948_Status_e icm20948_set_dlpf_cfg(ICM_20948_InternalSensorID_bm sensors, ICM_20948_dlpcfg_t cfg)
+{
+  ICM_20948_Status_e retval = ICM_20948_Stat_Ok;
+
+  if (!(sensors & (ICM_20948_Internal_Acc | ICM_20948_Internal_Gyr)))
+  {
+    return ICM_20948_Stat_SensorNotSupported;
+  }
+
+  if (sensors & ICM_20948_Internal_Acc)
+  {
+    ICM_20948_ACCEL_CONFIG_t reg;
+    retval |= icm20948_set_user_bank(2); // Must be in the right bank
+    retval |= icm20948_execute_r(AGB2_REG_ACCEL_CONFIG, (uint8_t *)&reg, sizeof(ICM_20948_ACCEL_CONFIG_t));
+    reg.ACCEL_DLPFCFG = cfg.a;
+    retval |= icm20948_execute_w(AGB2_REG_ACCEL_CONFIG, (uint8_t *)&reg, sizeof(ICM_20948_ACCEL_CONFIG_t));
+    // Check the data was written correctly
+    retval |= icm20948_execute_r(AGB2_REG_ACCEL_CONFIG, (uint8_t *)&reg, sizeof(ICM_20948_ACCEL_CONFIG_t));
+    if (reg.ACCEL_DLPFCFG != cfg.a) retval |= ICM_20948_Stat_Err;
+  }
+  if (sensors & ICM_20948_Internal_Gyr)
+  {
+    ICM_20948_GYRO_CONFIG_1_t reg;
+    retval |= icm20948_set_user_bank(2); // Must be in the right bank
+    retval |= icm20948_execute_r(AGB2_REG_GYRO_CONFIG_1, (uint8_t *)&reg, sizeof(ICM_20948_GYRO_CONFIG_1_t));
+    reg.GYRO_DLPFCFG = cfg.g;
+    retval |= icm20948_execute_w(AGB2_REG_GYRO_CONFIG_1, (uint8_t *)&reg, sizeof(ICM_20948_GYRO_CONFIG_1_t));
+    // Check the data was written correctly
+    retval |= icm20948_execute_r(AGB2_REG_GYRO_CONFIG_1, (uint8_t *)&reg, sizeof(ICM_20948_GYRO_CONFIG_1_t));
+    if (reg.GYRO_DLPFCFG != cfg.g) retval |= ICM_20948_Stat_Err;
+  }
+  return retval;
+}
+
+
 int8_t icm20948_set_sample_rate(ICM_20948_InternalSensorID_bm sensors, ICM_20948_smplrt_t smplrt)
 {
   if (!(sensors & (ICM_20948_Internal_Acc | ICM_20948_Internal_Gyr)))
@@ -789,15 +828,15 @@ int8_t icm20948_enable_DMP_sensor(enum inv_icm20948_sensor sensor, int state)
     }
   }
 
-  /*
-  ICM_20948_sleep(pdev, false); // Make sure chip is awake
-  if (result != ICM_20948_Stat_Ok)
+
+  icm20948_sleep(false); // Make sure chip is awake
+  /*if (result != ICM_20948_Stat_Ok)
   {
     return result;
-  }
+  }*/
 
-  ICM_20948_low_power(pdev, false); // Make sure chip is not in low power state
-  if (result != ICM_20948_Stat_Ok)
+  icm20948_low_power(false); // Make sure chip is not in low power state
+  /*if (result != ICM_20948_Stat_Ok)
   {
     return result;
   }*/
@@ -862,11 +901,11 @@ int8_t icm20948_enable_DMP_sensor(enum inv_icm20948_sensor sensor, int state)
   /*if (result != ICM_20948_Stat_Ok)
   {
     return result;
-  }
+  }*/
 
-  ICM_20948_low_power(pdev, true); // Put chip into low power state
+  icm20948_low_power(true); // Put chip into low power state
 
-  */
+
 
   return 0;
 }
@@ -890,9 +929,9 @@ int8_t icm20948_set_DMP_sensor_period(enum DMP_ODR_Registers odr_reg, uint16_t i
 
   unsigned char odr_count_zero[2] = {0x00, 0x00};
 
-  //ICM_20948_sleep(false); // Make sure chip is awake
+  icm20948_sleep(false); // Make sure chip is awake
 
-  //ICM_20948_low_power(false); // Make sure chip is not in low power state
+  icm20948_low_power(false); // Make sure chip is not in low power state
 
 
   switch (odr_reg)
@@ -968,7 +1007,7 @@ int8_t icm20948_set_DMP_sensor_period(enum DMP_ODR_Registers odr_reg, uint16_t i
     break;
   }
 
-  //ICM_20948_low_power(true); // Put chip into low power state
+  icm20948_low_power(true); // Put chip into low power state
 
   return 0;
 }
@@ -1004,6 +1043,8 @@ int8_t icm20948_read_FIFO(uint8_t *data, uint8_t len)
 
 int8_t icm20948_read_DMP_data(icm_20948_DMP_data_t *data)
 {
+  data->header = 0; // Clear the existing header
+
   uint8_t fifoBytes[icm_20948_DMP_Maximum_Bytes]; // Interim storage for the FIFO data
 
   // Check how much data is in the FIFO
@@ -1011,11 +1052,12 @@ int8_t icm20948_read_DMP_data(icm_20948_DMP_data_t *data)
   icm20948_get_FIFO_count(&fifo_count);
 
 
+
+
   if (fifo_count < icm_20948_DMP_Header_Bytes) // Has a 2-byte header arrived?
     return -1;     // Bail if no header is available
 
   // Read the header (2 bytes)
-  data->header = 0; // Clear the existing header
   uint16_t aShort = 0;
   icm20948_read_FIFO(&fifoBytes[0], icm_20948_DMP_Header_Bytes);
 
@@ -1403,6 +1445,86 @@ int8_t icm20948_read_DMP_data(icm_20948_DMP_data_t *data)
   return 0;
 }
 
+ICM_20948_Status_e icm20948_sleep(bool on)
+{
+  ICM_20948_Status_e retval = ICM_20948_Stat_Ok;
+  ICM_20948_PWR_MGMT_1_t reg;
+
+  icm20948_set_user_bank(0); // Must be in the right bank
+
+  HAL_I2C_Mem_Read(&i2c_bus, ICM_20948_I2C_ADDR, AGB0_REG_PWR_MGMT_1, I2C_MEMADD_SIZE_8BIT, (uint8_t *)&reg, sizeof(ICM_20948_PWR_MGMT_1_t), 1000);
+
+
+  if (on)
+  {
+    reg.SLEEP = 1;
+  }
+  else
+  {
+    reg.SLEEP = 0;
+  }
+
+  HAL_I2C_Mem_Write(&i2c_bus, ICM_20948_I2C_ADDR, AGB0_REG_PWR_MGMT_1, I2C_MEMADD_SIZE_8BIT,  (uint8_t *)&reg, sizeof(ICM_20948_PWR_MGMT_1_t), 1000);
+
+  return retval;
+}
+
+
+ICM_20948_Status_e icm20948_low_power(bool on)
+{
+  ICM_20948_Status_e retval = ICM_20948_Stat_Ok;
+  ICM_20948_PWR_MGMT_1_t reg;
+
+  icm20948_set_user_bank(0); // Must be in the right bank
+
+  HAL_I2C_Mem_Read(&i2c_bus, ICM_20948_I2C_ADDR,  AGB0_REG_PWR_MGMT_1, I2C_MEMADD_SIZE_8BIT, (uint8_t *)&reg, sizeof(ICM_20948_PWR_MGMT_1_t), 1000);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+
+  if (on)
+  {
+    reg.LP_EN = 1;
+  }
+  else
+  {
+    reg.LP_EN = 0;
+  }
+
+  HAL_I2C_Mem_Write(&i2c_bus, ICM_20948_I2C_ADDR,  AGB0_REG_PWR_MGMT_1, I2C_MEMADD_SIZE_8BIT, (uint8_t *)&reg, sizeof(ICM_20948_PWR_MGMT_1_t), 1000);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+  return retval;
+}
+
+
+ICM_20948_Status_e icm20948_sw_reset(void)
+{
+  ICM_20948_Status_e retval = ICM_20948_Stat_Ok;
+  ICM_20948_PWR_MGMT_1_t reg;
+
+  icm20948_set_user_bank(0); // Must be in the right bank
+
+  retval = icm20948_execute_r(AGB0_REG_PWR_MGMT_1, (uint8_t *)&reg, sizeof(ICM_20948_PWR_MGMT_1_t));
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+
+  reg.DEVICE_RESET = 1;
+
+  retval = icm20948_execute_w(AGB0_REG_PWR_MGMT_1, (uint8_t *)&reg, sizeof(ICM_20948_PWR_MGMT_1_t));
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+  return retval;
+}
+
+
 int8_t icm20948_load_firmware(const unsigned char *data_start, unsigned short size_start, unsigned short load_addr)
 {
   int write_size;
@@ -1410,27 +1532,18 @@ int8_t icm20948_load_firmware(const unsigned char *data_start, unsigned short si
   const unsigned char *data;
   unsigned short size;
   unsigned char data_cmp[MAX_SERIAL_R_W];
-  int flag = 0;
+  //int flag = 0;
 
-/* //STATUS CHECKS
-  if (pdev->_dmp_firmware_available == false)
-    return ICM_20948_Stat_DMPNotSupported;
-
-  if (pdev->_firmware_loaded)
-    return ICM_20948_Stat_Ok; // Bail with no error if firmware is already loaded
-
-  ICM_20948_sleep(pdev, false); // Make sure chip is awake
-  if (result != ICM_20948_Stat_Ok)
+ //STATUS CHECKS
+  icm20948_sleep(false); // Make sure chip is awake
+  /*if (result != ICM_20948_Stat_Ok)
   {
     return result;
-  }
+  }*/
 
-  ICM_20948_low_power(pdev, false); // Make sure chip is not in low power state
-  if (result != ICM_20948_Stat_Ok)
-  {
-    return result;
-  }
-*/
+  icm20948_low_power(false); // Make sure chip is not in low power state
+
+
 
   // Write DMP memory
 
@@ -1488,12 +1601,12 @@ int8_t icm20948_load_firmware(const unsigned char *data_start, unsigned short si
     size -= write_size;
     memaddr += write_size;
   }
-  /*
+
   //Enable LP_EN since we disabled it at begining of this function.
-  ICM_20948_low_power(pdev, true); // Put chip into low power state
-  if (result != ICM_20948_Stat_Ok)
-    return result;
-  */
+  icm20948_low_power(true); // Put chip into low power state
+  //if (result != ICM_20948_Stat_Ok)
+  //  return result;
+
   return 0;
 }
 
@@ -1732,4 +1845,554 @@ int8_t icm20948_initialize_DMP(void)
   //intEnableDMP(true);
 
   return 0;
+}
+
+ICM_20948_Status_e icm20948_execute_r(uint8_t regaddr, uint8_t *pdata, uint32_t len)
+{
+	if(HAL_I2C_Mem_Read(&i2c_bus, ICM_20948_I2C_ADDR, regaddr, I2C_MEMADD_SIZE_8BIT, pdata, len, 1000))
+		return ICM_20948_Stat_Err;
+	return ICM_20948_Stat_Ok;
+}
+
+ICM_20948_Status_e icm20948_execute_w(uint8_t regaddr, uint8_t *pdata, uint32_t len)
+{
+	if(HAL_I2C_Mem_Write(&i2c_bus, ICM_20948_I2C_ADDR, regaddr, I2C_MEMADD_SIZE_8BIT, pdata, len, 1000))
+		return ICM_20948_Stat_Err;
+	return ICM_20948_Stat_Ok;
+}
+
+ICM_20948_Status_e icm20948_get_agmt(ICM_20948_AGMT_t *pagmt)
+{
+  if (pagmt == NULL)
+  {
+    return ICM_20948_Stat_ParamErr;
+  }
+
+  ICM_20948_Status_e retval = ICM_20948_Stat_Ok;
+  const uint8_t numbytes = 14 + 9; //Read Accel, gyro, temp, and 9 bytes of mag
+  uint8_t buff[numbytes];
+
+  // Get readings
+  retval |= icm20948_set_user_bank(0);
+  retval |= icm20948_execute_r((uint8_t)AGB0_REG_ACCEL_XOUT_H, buff, numbytes);
+
+  pagmt->acc.axes.x = ((buff[0] << 8) | (buff[1] & 0xFF));
+  pagmt->acc.axes.y = ((buff[2] << 8) | (buff[3] & 0xFF));
+  pagmt->acc.axes.z = ((buff[4] << 8) | (buff[5] & 0xFF));
+
+  pagmt->gyr.axes.x = ((buff[6] << 8) | (buff[7] & 0xFF));
+  pagmt->gyr.axes.y = ((buff[8] << 8) | (buff[9] & 0xFF));
+  pagmt->gyr.axes.z = ((buff[10] << 8) | (buff[11] & 0xFF));
+
+  pagmt->tmp.val = ((buff[12] << 8) | (buff[13] & 0xFF));
+
+  pagmt->magStat1 = buff[14];
+  pagmt->mag.axes.x = ((buff[16] << 8) | (buff[15] & 0xFF)); //Mag data is read little endian
+  pagmt->mag.axes.y = ((buff[18] << 8) | (buff[17] & 0xFF));
+  pagmt->mag.axes.z = ((buff[20] << 8) | (buff[19] & 0xFF));
+  pagmt->magStat2 = buff[22];
+
+  // Get settings to be able to compute scaled values
+  retval |= icm20948_set_user_bank(2);
+  ICM_20948_ACCEL_CONFIG_t acfg;
+  retval |= icm20948_execute_r((uint8_t)AGB2_REG_ACCEL_CONFIG, (uint8_t *)&acfg, 1 * sizeof(acfg));
+  pagmt->fss.a = acfg.ACCEL_FS_SEL; // Worth noting that without explicitly setting the FS range of the accelerometer it was showing the register value for +/- 2g but the reported values were actually scaled to the +/- 16g range
+                                    // Wait a minute... now it seems like this problem actually comes from the digital low-pass filter. When enabled the value is 1/8 what it should be...
+  retval |= icm20948_set_user_bank(2);
+  ICM_20948_GYRO_CONFIG_1_t gcfg1;
+  retval |= icm20948_execute_r((uint8_t)AGB2_REG_GYRO_CONFIG_1, (uint8_t *)&gcfg1, 1 * sizeof(gcfg1));
+  pagmt->fss.g = gcfg1.GYRO_FS_SEL;
+  ICM_20948_ACCEL_CONFIG_2_t acfg2;
+  retval |= icm20948_execute_r((uint8_t)AGB2_REG_ACCEL_CONFIG_2, (uint8_t *)&acfg2, 1 * sizeof(acfg2));
+
+  return retval;
+}
+
+ICM_20948_Status_e icm20948_startup_magnetometer(bool minimal)
+{
+  ICM_20948_Status_e retval = ICM_20948_Stat_Ok;
+
+  icm20948_i2c_master_passthrough(false); //Do not connect the SDA/SCL pins to AUX_DA/AUX_CL
+  icm20948_i2c_master_enable(true);
+
+  icm20948_reset_magnetomter();
+
+  //After a ICM reset the Mag sensor may stop responding over the I2C master
+  //Reset the Master I2C until it responds
+  uint8_t tries = 0;
+  while (tries < MAX_MAGNETOMETER_STARTS)
+  {
+    tries++;
+
+    //See if we can read the WhoIAm register correctly
+    retval = icm20948_mag_who_i_am();
+    if (retval == ICM_20948_Stat_Ok)
+      break; //WIA matched!
+
+    icm20948_i2c_master_reset(); //Otherwise, reset the master I2C and try again
+
+    HAL_Delay(10);
+  }
+
+  if (tries == MAX_MAGNETOMETER_STARTS)
+  {
+    /*debugPrint(F("ICM_20948::startupMagnetometer: reached MAX_MAGNETOMETER_STARTS ("));
+    debugPrintf((int)MAX_MAGNETOMETER_STARTS);
+    debugPrintln(F("). Returning ICM_20948_Stat_WrongID"));*/
+    status = ICM_20948_Stat_WrongID;
+    return status;
+  }
+  /*else
+  {
+    debugPrint(F("ICM_20948::startupMagnetometer: successful magWhoIAm after "));
+    debugPrintf((int)tries);
+    if (tries == 1)
+      debugPrintln(F(" try"));
+    else
+      debugPrintln(F(" tries"));
+  }*/
+
+  //Return now if minimal is true. The mag will be configured manually for the DMP
+  if (minimal) // Return now if minimal is true
+  {
+    //debugPrintln(F("ICM_20948::startupMagnetometer: minimal startup complete!"));
+    return status;
+  }
+
+  //Set up magnetometer
+  AK09916_CNTL2_Reg_t reg;
+  reg.MODE = AK09916_mode_cont_100hz;
+  reg.reserved_0 = 0; // Make sure the unused bits are clear. Probably redundant, but prevents confusion when looking at the I2C traffic
+  retval = icm20948_write_mag(AK09916_REG_CNTL2, (uint8_t *)&reg);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    /*debugPrint(F("ICM_20948::startupMagnetometer: writeMag returned: "));
+    debugPrintStatus(retval);
+    debugPrintln(F(""));*/
+    status = retval;
+    return status;
+  }
+
+  retval = icm20948_i2c_controller_configure_peripheral(0, MAG_AK09916_I2C_ADDR, AK09916_REG_ST1, 9, true, true, false, false, false, 0);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    /*debugPrint(F("ICM_20948::startupMagnetometer: i2cMasterConfigurePeripheral returned: "));
+    debugPrintStatus(retval);
+    debugPrintln(F(""));*/
+    status = retval;
+    return status;
+  }
+
+  return status;
+}
+
+ICM_20948_Status_e icm20948_i2c_master_passthrough(bool passthrough)
+{
+  ICM_20948_Status_e retval = ICM_20948_Stat_Ok;
+
+  ICM_20948_INT_PIN_CFG_t reg;
+  retval = icm20948_set_user_bank(0);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+  retval = icm20948_execute_r(AGB0_REG_INT_PIN_CONFIG, (uint8_t *)&reg, sizeof(ICM_20948_INT_PIN_CFG_t));
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+  reg.BYPASS_EN = passthrough;
+  retval = icm20948_execute_w(AGB0_REG_INT_PIN_CONFIG, (uint8_t *)&reg, sizeof(ICM_20948_INT_PIN_CFG_t));
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+
+  return retval;
+}
+
+ICM_20948_Status_e icm20948_i2c_master_enable(bool enable)
+{
+  ICM_20948_Status_e retval = ICM_20948_Stat_Ok;
+
+  // Disable BYPASS_EN
+  retval = icm20948_i2c_master_passthrough(false);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+
+  ICM_20948_I2C_MST_CTRL_t ctrl;
+  retval = icm20948_set_user_bank(3);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+  retval = icm20948_execute_r(AGB3_REG_I2C_MST_CTRL, (uint8_t *)&ctrl, sizeof(ICM_20948_I2C_MST_CTRL_t));
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+  ctrl.I2C_MST_CLK = 0x07; // corresponds to 345.6 kHz, good for up to 400 kHz
+  ctrl.I2C_MST_P_NSR = 1;
+  retval = icm20948_execute_w(AGB3_REG_I2C_MST_CTRL, (uint8_t *)&ctrl, sizeof(ICM_20948_I2C_MST_CTRL_t));
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+
+  ICM_20948_USER_CTRL_t reg;
+  retval = icm20948_set_user_bank(0);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+  retval = icm20948_execute_r(AGB0_REG_USER_CTRL, (uint8_t *)&reg, sizeof(ICM_20948_USER_CTRL_t));
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+  if (enable)
+  {
+    reg.I2C_MST_EN = 1;
+  }
+  else
+  {
+    reg.I2C_MST_EN = 0;
+  }
+  retval = icm20948_execute_w(AGB0_REG_USER_CTRL, (uint8_t *)&reg, sizeof(ICM_20948_USER_CTRL_t));
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+
+  return retval;
+}
+
+
+ICM_20948_Status_e icm20948_reset_magnetomter()
+{
+  uint8_t SRST = 1;
+  // SRST: Soft reset
+  // “0”: Normal
+  // “1”: Reset
+  // When “1” is set, all registers are initialized. After reset, SRST bit turns to “0” automatically.
+  status = icm20948_i2c_master_single_w(MAG_AK09916_I2C_ADDR, AK09916_REG_CNTL3, &SRST);
+  return status;
+}
+
+
+ICM_20948_Status_e icm20948_i2c_master_single_w(uint8_t addr, uint8_t reg, uint8_t *data)
+{
+  return icm20948_i2c_controller_periph4_txn(addr, reg, data, 1, false, true);
+}
+
+
+ICM_20948_Status_e icm20948_i2c_master_single_r(uint8_t addr, uint8_t reg, uint8_t *data)
+{
+  return icm20948_i2c_controller_periph4_txn(addr, reg, data, 1, true, true);
+}
+
+
+ICM_20948_Status_e icm20948_i2c_controller_periph4_txn(uint8_t addr, uint8_t reg, uint8_t *data, uint8_t len, bool Rw, bool send_reg_addr)
+{
+  // Thanks MikeFair! // https://github.com/kriswiner/MPU9250/issues/86
+  ICM_20948_Status_e retval = ICM_20948_Stat_Ok;
+
+  addr = (((Rw) ? 0x80 : 0x00) | addr);
+
+  retval = icm20948_set_user_bank(3);
+  retval = icm20948_execute_w(AGB3_REG_I2C_PERIPH4_ADDR, (uint8_t *)&addr, 1);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+
+  retval = icm20948_set_user_bank(3);
+  retval = icm20948_execute_w(AGB3_REG_I2C_PERIPH4_REG, (uint8_t *)&reg, 1);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+
+  ICM_20948_I2C_PERIPH4_CTRL_t ctrl;
+  ctrl.EN = 1;
+  ctrl.INT_EN = false;
+  ctrl.DLY = 0;
+  ctrl.REG_DIS = !send_reg_addr;
+
+  ICM_20948_I2C_MST_STATUS_t i2c_mst_status;
+  bool txn_failed = false;
+  uint16_t nByte = 0;
+
+  while (nByte < len)
+  {
+    if (!Rw)
+    {
+      retval = icm20948_set_user_bank(3);
+      retval = icm20948_execute_w(AGB3_REG_I2C_PERIPH4_DO, (uint8_t *)&(data[nByte]), 1);
+      if (retval != ICM_20948_Stat_Ok)
+      {
+        return retval;
+      }
+    }
+
+    // Kick off txn
+    retval = icm20948_set_user_bank(3);
+    retval = icm20948_execute_w(AGB3_REG_I2C_PERIPH4_CTRL, (uint8_t *)&ctrl, sizeof(ICM_20948_I2C_PERIPH4_CTRL_t));
+    if (retval != ICM_20948_Stat_Ok)
+    {
+      return retval;
+    }
+
+    // long tsTimeout = millis() + 3000;  // Emergency timeout for txn (hard coded to 3 secs)
+    uint32_t max_cycles = 1000;
+    uint32_t count = 0;
+    bool peripheral4Done = false;
+    while (!peripheral4Done)
+    {
+      retval = icm20948_set_user_bank(0);
+      retval = icm20948_execute_r(AGB0_REG_I2C_MST_STATUS, (uint8_t *)&i2c_mst_status, 1);
+
+      peripheral4Done = (i2c_mst_status.I2C_PERIPH4_DONE /*| (millis() > tsTimeout) */); //Avoid forever-loops
+      peripheral4Done |= (count >= max_cycles);
+      count++;
+    }
+    txn_failed = (i2c_mst_status.I2C_PERIPH4_NACK /*| (millis() > tsTimeout) */);
+    txn_failed |= (count >= max_cycles);
+    if (txn_failed)
+      break;
+
+    if (Rw)
+    {
+      retval = icm20948_set_user_bank(3);
+      retval = icm20948_execute_r(AGB3_REG_I2C_PERIPH4_DI, &data[nByte], 1);
+    }
+
+    nByte++;
+  }
+
+  if (txn_failed)
+  {
+    //We often fail here if mag is stuck
+    return ICM_20948_Stat_Err;
+  }
+
+  return retval;
+}
+
+
+ICM_20948_Status_e icm20948_i2c_master_reset()
+{
+  ICM_20948_Status_e retval = ICM_20948_Stat_Ok;
+
+  ICM_20948_USER_CTRL_t ctrl;
+  retval = icm20948_set_user_bank(0);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+
+  retval = icm20948_execute_r(AGB0_REG_USER_CTRL, (uint8_t *)&ctrl, sizeof(ICM_20948_USER_CTRL_t));
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+
+  ctrl.I2C_MST_RST = 1; //Reset!
+
+  retval = icm20948_execute_w(AGB0_REG_USER_CTRL, (uint8_t *)&ctrl, sizeof(ICM_20948_USER_CTRL_t));
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    return retval;
+  }
+  return retval;
+}
+
+ICM_20948_Status_e icm20948_mag_who_i_am(void)
+{
+  ICM_20948_Status_e retval = ICM_20948_Stat_Ok;
+
+  uint8_t whoiam1, whoiam2;
+  whoiam1 = icm20948_read_mag(AK09916_REG_WIA1);
+  // readMag calls i2cMasterSingleR which calls ICM_20948_i2c_master_single_r
+  // i2cMasterSingleR updates status so it is OK to set retval to status here
+  retval = status;
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    /*debugPrint(F("ICM_20948::magWhoIAm: whoiam1: "));
+    debugPrintf((int)whoiam1);
+    debugPrint(F(" (should be 72) readMag set status to: "));
+    debugPrintStatus(status);
+    debugPrintln(F(""));*/
+    return retval;
+  }
+  whoiam2 = icm20948_read_mag(AK09916_REG_WIA2);
+  // readMag calls i2cMasterSingleR which calls ICM_20948_i2c_master_single_r
+  // i2cMasterSingleR updates status so it is OK to set retval to status here
+  retval = status;
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    /*debugPrint(F("ICM_20948::magWhoIAm: whoiam1: "));
+    debugPrintf((int)whoiam1);
+    debugPrint(F(" (should be 72) whoiam2: "));
+    debugPrintf((int)whoiam2);
+    debugPrint(F(" (should be 9) readMag set status to: "));
+    debugPrintStatus(status);
+    debugPrintln(F(""));*/
+    return retval;
+  }
+
+  if ((whoiam1 == (MAG_AK09916_WHO_AM_I >> 8)) && (whoiam2 == (MAG_AK09916_WHO_AM_I & 0xFF)))
+  {
+    retval = ICM_20948_Stat_Ok;
+    status = retval;
+    return status;
+  }
+
+  /*debugPrint(F("ICM_20948::magWhoIAm: whoiam1: "));
+  debugPrintf((int)whoiam1);
+  debugPrint(F(" (should be 72) whoiam2: "));
+  debugPrintf((int)whoiam2);
+  debugPrintln(F(" (should be 9). Returning ICM_20948_Stat_WrongID"));*/
+
+  retval = ICM_20948_Stat_WrongID;
+  status = retval;
+  return status;
+}
+
+
+uint8_t icm20948_read_mag(AK09916_Reg_Addr_e reg)
+{
+  uint8_t data;
+  icm20948_i2c_master_single_r(MAG_AK09916_I2C_ADDR, reg, &data); // i2cMasterSingleR updates status too
+  return data;
+}
+
+
+ICM_20948_Status_e icm20948_write_mag(AK09916_Reg_Addr_e reg, uint8_t *pdata)
+{
+  status = icm20948_i2c_master_single_w(MAG_AK09916_I2C_ADDR, reg, pdata);
+  return status;
+}
+
+
+ICM_20948_Status_e icm20948_startup_default(bool minimal)
+{
+  ICM_20948_Status_e retval = ICM_20948_Stat_Ok;
+
+  /*retval = checkID();
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    debugPrint(F("ICM_20948::startupDefault: checkID returned: "));
+    debugPrintStatus(retval);
+    debugPrintln(F(""));
+    status = retval;
+    return status;
+  }*/
+
+  retval = icm20948_sw_reset();
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    /*debugPrint(F("ICM_20948::startupDefault: swReset returned: "));
+    debugPrintStatus(retval);
+    debugPrintln(F(""));*/
+    status = retval;
+    return status;
+  }
+  HAL_Delay(50);
+
+  retval = icm20948_sleep(false);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    /*debugPrint(F("ICM_20948::startupDefault: sleep returned: "));
+    debugPrintStatus(retval);
+    debugPrintln(F(""));*/
+    status = retval;
+    return status;
+  }
+
+  retval = icm20948_low_power(false);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    /*debugPrint(F("ICM_20948::startupDefault: lowPower returned: "));
+    debugPrintStatus(retval);
+    debugPrintln(F(""));*/
+    status = retval;
+    return status;
+  }
+
+  retval = icm20948_startup_magnetometer(minimal); // Pass the minimal startup flag to startupMagnetometer
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    /*debugPrint(F("ICM_20948::startupDefault: startupMagnetometer returned: "));
+    debugPrintStatus(retval);
+    debugPrintln(F(""));*/
+    status = retval;
+    return status;
+  }
+
+  if (minimal) // Return now if minimal is true
+  {
+    //debugPrintln(F("ICM_20948::startupDefault: minimal startup complete!"));
+    return status;
+  }
+
+  retval = icm20948_set_sample_mode((ICM_20948_Internal_Acc | ICM_20948_Internal_Gyr), ICM_20948_Sample_Mode_Continuous); // options: ICM_20948_Sample_Mode_Continuous or ICM_20948_Sample_Mode_Cycled
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    /*debugPrint(F("ICM_20948::startupDefault: setSampleMode returned: "));
+    debugPrintStatus(retval);
+    debugPrintln(F(""));*/
+    status = retval;
+    return status;
+  } // sensors: 	ICM_20948_Internal_Acc, ICM_20948_Internal_Gyr, ICM_20948_Internal_Mst
+
+  ICM_20948_fss_t FSS;
+  FSS.a = gpm2;   // (ICM_20948_ACCEL_CONFIG_FS_SEL_e)
+  FSS.g = dps250; // (ICM_20948_GYRO_CONFIG_1_FS_SEL_e)
+  retval = icm20948_set_full_scale((ICM_20948_Internal_Acc | ICM_20948_Internal_Gyr), FSS);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    /*debugPrint(F("ICM_20948::startupDefault: setFullScale returned: "));
+    debugPrintStatus(retval);
+    debugPrintln(F(""));*/
+    status = retval;
+    return status;
+  }
+
+  ICM_20948_dlpcfg_t dlpcfg;
+  dlpcfg.a = acc_d473bw_n499bw;
+  dlpcfg.g = gyr_d361bw4_n376bw5;
+  retval = icm20948_set_dlpf_cfg((ICM_20948_Internal_Acc | ICM_20948_Internal_Gyr), dlpcfg);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    /*debugPrint(F("ICM_20948::startupDefault: setDLPFcfg returned: "));
+    debugPrintStatus(retval);
+    debugPrintln(F(""));*/
+    status = retval;
+    return status;
+  }
+
+  retval = icm20948_enable_dlpf(ICM_20948_Internal_Acc, false);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    /*debugPrint(F("ICM_20948::startupDefault: enableDLPF (Acc) returned: "));
+    debugPrintStatus(retval);
+    debugPrintln(F(""));*/
+    status = retval;
+    return status;
+  }
+
+  retval = icm20948_enable_dlpf(ICM_20948_Internal_Gyr, false);
+  if (retval != ICM_20948_Stat_Ok)
+  {
+    /*debugPrint(F("ICM_20948::startupDefault: enableDLPF (Gyr) returned: "));
+    debugPrintStatus(retval);
+    debugPrintln(F(""));*/
+    status = retval;
+    return status;
+  }
+
+  return status;
 }

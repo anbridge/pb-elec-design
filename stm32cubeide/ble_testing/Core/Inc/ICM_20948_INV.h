@@ -25,7 +25,6 @@ extern "C"
 #include "AK09916_REGISTERS.h"
 #include "ICM_20948_DMP.h"
 
-
 extern int memcmp(const void *, const void *, size_t); // Avoid compiler warnings
 
 // Define if the DMP will be supported
@@ -45,6 +44,8 @@ extern int memcmp(const void *, const void *, size_t); // Avoid compiler warning
 #define MAG_AK09916_I2C_ADDR 0x0C
 #define MAG_AK09916_WHO_AM_I 0x4809
 #define MAG_REG_WHO_AM_I 0x00
+
+#define MAX_MAGNETOMETER_STARTS 10
 
 #define MAX_SERIAL_R_W 16 //16 bytes max serial read/write for ICM-20948
 
@@ -189,7 +190,7 @@ extern int memcmp(const void *, const void *, size_t); // Avoid compiler warning
   } ICM_20948_Device_t;               // Definition of device struct type
 
 extern void icm20948_set_i2c_bus(I2C_HandleTypeDef *bus);
-extern void icm20948_set_user_bank(uint8_t bank);
+extern ICM_20948_Status_e icm20948_set_user_bank(uint8_t bank);
 extern int8_t sensor_type_2_android_sensor(enum inv_icm20948_sensor sensor);
 extern int8_t icm20948_i2c_controller_configure_peripheral(uint8_t peripheral, uint8_t addr, uint8_t reg, uint8_t len, bool Rw, bool enable, bool data_only, bool grp, bool swap, uint8_t dataOut);
 extern int8_t icm20948_set_clock_source(ICM_20948_PWR_MGMT_1_CLKSEL_e source);
@@ -200,6 +201,7 @@ extern int8_t icm20948_enable_DMP(bool enable);
 extern int8_t icm20948_reset_DMP();
 extern int8_t icm20948_set_full_scale(ICM_20948_InternalSensorID_bm sensors, ICM_20948_fss_t fss);
 extern int8_t icm20948_enable_dlpf(ICM_20948_InternalSensorID_bm sensors, bool enable);
+extern ICM_20948_Status_e icm20948_set_dlpf_cfg(ICM_20948_InternalSensorID_bm sensors, ICM_20948_dlpcfg_t cfg);
 extern int8_t icm20948_set_sample_rate(ICM_20948_InternalSensorID_bm sensors, ICM_20948_smplrt_t smplrt);
 extern int8_t icm20948_int_enable(ICM_20948_INT_enable_t *write, ICM_20948_INT_enable_t *read);
 extern int8_t icm20948_int_enable_raw_data_ready(bool enable);
@@ -212,9 +214,27 @@ extern int8_t icm20948_set_DMP_sensor_period(enum DMP_ODR_Registers odr_reg, uin
 extern int8_t icm20948_get_FIFO_count(uint16_t *count);
 extern int8_t icm20948_read_FIFO(uint8_t *data, uint8_t len);
 extern int8_t icm20948_read_DMP_data(icm_20948_DMP_data_t *data);
+extern ICM_20948_Status_e icm20948_sleep(bool on);
+extern ICM_20948_Status_e icm20948_low_power(bool on);
 extern int8_t icm20948_load_firmware(const unsigned char *data_start, unsigned short size_start, unsigned short load_addr);
 extern int8_t icm20948_initialize_DMP(void);
-
+extern ICM_20948_Status_e icm20948_execute_r(uint8_t regaddr, uint8_t *pdata, uint32_t len);
+extern ICM_20948_Status_e icm20948_execute_w(uint8_t regaddr, uint8_t *pdata, uint32_t len);
+extern ICM_20948_Status_e icm20948_get_agmt(ICM_20948_AGMT_t *pagmt);
+extern uint8_t icm20948_read_mag(AK09916_Reg_Addr_e reg);
+extern ICM_20948_Status_e icm20948_i2c_master_reset();
+extern ICM_20948_Status_e icm20948_i2c_controller_periph4_txn(uint8_t addr, uint8_t reg, uint8_t *data, uint8_t len, bool Rw, bool send_reg_addr);
+extern ICM_20948_Status_e icm20948_i2c_master_single_w(uint8_t addr, uint8_t reg, uint8_t *data);
+extern ICM_20948_Status_e icm20948_reset_magnetomter();
+extern ICM_20948_Status_e icm20948_i2c_master_single_r(uint8_t addr, uint8_t reg, uint8_t *data);
+extern ICM_20948_Status_e icm20948_reset_magnetomter();
+extern ICM_20948_Status_e icm20948_i2c_master_enable( bool enable);
+extern ICM_20948_Status_e icm20948_i2c_master_passthrough(bool passthrough);
+extern ICM_20948_Status_e icm20948_startup_magnetometer(bool minimal);
+extern ICM_20948_Status_e icm20948_write_mag(AK09916_Reg_Addr_e reg, uint8_t *pdata);
+extern ICM_20948_Status_e icm20948_mag_who_i_am(void);
+extern ICM_20948_Status_e icm20948_sw_reset(void);
+extern ICM_20948_Status_e icm20948_startup_default(bool minimal);
 
 #ifdef __cplusplus
 }

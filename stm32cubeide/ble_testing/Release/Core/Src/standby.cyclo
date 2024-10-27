@@ -1,0 +1,5 @@
+../Core/Src/standby.c:81:6:STBY_AppHwSave	1
+../Core/Src/standby.c:91:6:STBY_AppHwRestore	15
+../Core/Src/standby.c:114:6:STBY_SysHwSave	1
+../Core/Src/standby.c:125:6:STBY_SysHwRestore	2
+../Core/Src/standby.c:158:10:STBY_BootManager	1

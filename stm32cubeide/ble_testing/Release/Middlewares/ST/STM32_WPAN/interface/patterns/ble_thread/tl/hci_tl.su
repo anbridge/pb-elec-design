@@ -1,0 +1,7 @@
+../Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.c:68:6:hci_init	32	static
+../Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.c:80:6:hci_user_evt_proc	24	static
+../Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.c:138:6:hci_resume_flow	0	static
+../Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.c:292:13:hci_cmd_resp_wait	0	static
+../Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.c:151:5:hci_send_req	40	static
+../Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.c:301:13:hci_cmd_resp_release	0	static
+../Middlewares/ST/STM32_WPAN/interface/patterns/ble_thread/tl/hci_tl.c:275:13:TlEvtReceived	8	static

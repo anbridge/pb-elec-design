@@ -64,7 +64,7 @@ extern uint16_t Connection_Handle;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-uint16_t SizeInfo_C = 32; // 4x8byte doubles
+uint16_t SizeInfo_C = 64; // 2 x 4x8byte doubles
 
 /**
  * START of Section BLE_DRIVER_CONTEXT

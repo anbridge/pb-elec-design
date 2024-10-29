@@ -128,6 +128,7 @@ async def main(address):
             #print("p: ", perpendiculars)
             #print("n: ", normals)
             #print("t: ", tangents)
+            #points, tangents, perpendiculars, new_normals = adjust_to_master_orientation( points, tangents, perpendicularss, normals, orientation)
             imu_pos, pts, prps = generate_spine(points_i, tangents, perpendiculars, 10)
             # draw imus with orientations
             for i in range(num_imus): 

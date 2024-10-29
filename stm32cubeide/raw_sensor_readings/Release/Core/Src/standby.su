@@ -1,0 +1,5 @@
+../Core/Src/standby.c:81:6:STBY_AppHwSave	0	static
+../Core/Src/standby.c:91:6:STBY_AppHwRestore	8	static,ignoring_inline_asm
+../Core/Src/standby.c:114:6:STBY_SysHwSave	0	static
+../Core/Src/standby.c:125:6:STBY_SysHwRestore	8	static
+../Core/Src/standby.c:158:10:STBY_BootManager	0	static

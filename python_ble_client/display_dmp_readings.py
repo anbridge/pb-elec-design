@@ -12,7 +12,7 @@ from mathutils import Vector
 
 plt.ion()
 
-pb_ble_mac = "00:80:E1:21:10:0F"
+pb_ble_mac = "00:80:E1:21:13:5A" #"00:80:E1:21:10:29" #"00:80:E1:21:10:0F"
 CHAR_UUID = "00001234-8e22-4541-9d4c-21edae82ed19"
 
 #math stuff
@@ -33,7 +33,8 @@ ax.axes.set_ylim3d(bottom=-1, top=1)
 ax.axes.set_zlim3d(bottom=-1, top=1)
 ax.set_box_aspect([1,1,1])
 
-
+qfixed = quaternion(0.5, 0.5, 0.5, 0.5)
+adjustments = [ quaternion(0.707, 0, 0, 0.707), quaternion(1, 0, 0, 0), quaternion(0.707, 0, 0, 0.707) ]
 
 # 
 def adjust_to_master_orientation(initial_points, i_t, i_p, i_n,  q_pt0):
@@ -100,11 +101,14 @@ async def main(address):
             for c in s.characteristics:
                 print(c)
 
-        points_i = [ Vector((0,0,0)), Vector((0,1,0)) ]
+        points_i = [ Vector((0,-1,0)), Vector((0,0,0)), Vector((0,1,0))]
         while 1:
             ax.axes.set_xlim3d(left=-1, right=1)
             ax.axes.set_ylim3d(bottom=-1, top=1)
             ax.axes.set_zlim3d(bottom=-1, top=1)
+            ax.set_xlabel('X axis')
+            ax.set_ylabel('Y axis')
+            ax.set_zlabel('Z axis')
             
             char_bytes = await client.read_gatt_char(CHAR_UUID)
             quat_doubles = array.array('d', char_bytes)
@@ -113,7 +117,7 @@ async def main(address):
             num_imus = int(len(quat_doubles)/4);
             for i in range(num_imus):
                 qd = quat_doubles[i*4:i*4+4]
-                q = from_float_array(qd)
+                q = adjustments[i]*from_float_array(qd)
                 q_c = q.conjugate()
                 t = q * y * q_c
                 p = q * x * q_c
@@ -133,16 +137,16 @@ async def main(address):
             # draw imus with orientations
             for i in range(num_imus): 
                 ts = tangents[i]; ps = perpendiculars[i]; ns = normals[i]
-                base = imu_pos[i]
+                base = points_i[i] #imu_pos[i]
                 ax.plot( xs=(base.x-0.15*ts.x, base.x+0.15*ts.x), ys=(base.y-0.15*ts.y, base.y+0.15*ts.y), zs=(base.z-0.15*ts.z, base.z+0.15*ts.z), c='red')
                 ax.plot( xs=(base.x-0.15*ps.x, base.x+0.15*ps.x), ys=(base.y-0.15*ps.y, base.y+0.15*ps.y), zs=(base.z-0.15*ps.z, base.z+0.15*ps.z), c='green')
                 ax.plot( xs=(base.x-0.15*ns.x, base.x+0.15*ns.x), ys=(base.y-0.15*ns.y, base.y+0.15*ns.y), zs=(base.z-0.15*ns.z, base.z+0.15*ns.z), c='blue')
 
             # draw interpolated spine
-            for i in range(len(pts)):
-                ax.plot( xs=(pts[i].x-0.15*prps[i].x, pts[i].x+0.15*prps[i].x), ys=(pts[i].y-0.15*prps[i].y, pts[i].y+0.15*prps[i].y), zs=(pts[i].z-0.15*prps[i].z, pts[i].z+0.15*prps[i].z), c='green')
-                if i != (len(pts)-1): # can't draw new line from last point
-                    ax.plot( xs=(pts[i].x, pts[i+1].x), ys=(pts[i].y, pts[i+1].y), zs=(pts[i].z, pts[i+1].z), c='black')
+            #for i in range(len(pts)):
+            #    ax.plot( xs=(pts[i].x-0.15*prps[i].x, pts[i].x+0.15*prps[i].x), ys=(pts[i].y-0.15*prps[i].y, pts[i].y+0.15*prps[i].y), zs=(pts[i].z-0.15*prps[i].z, pts[i].z+0.15*prps[i].z), c='green')
+            #    if i != (len(pts)-1): # can't draw new line from last point
+            #        ax.plot( xs=(pts[i].x, pts[i+1].x), ys=(pts[i].y, pts[i+1].y), zs=(pts[i].z, pts[i+1].z), c='black')
 
             plt.pause(0.05)
             ax.clear()

@@ -1,3 +1,4 @@
 ../Core/Src/pb_helper.c:3:8:set_i2c_mux_index	24	static
 ../Core/Src/pb_helper.c:11:6:put_double_in_buffer	48	static
 ../Core/Src/pb_helper.c:24:6:put_float_in_buffer	32	static
+../Core/Src/pb_helper.c:37:6:put_int32_in_buffer	32	static

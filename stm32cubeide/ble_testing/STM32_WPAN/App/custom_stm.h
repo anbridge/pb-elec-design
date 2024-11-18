@@ -34,14 +34,18 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 typedef enum
 {
-  /* PressCounter */
-  CUSTOM_STM_INFO_C,
+  /* Sensors */
+  CUSTOM_STM_DMPREADINGS,
+  CUSTOM_STM_DMPBIASES,
+  CUSTOM_STM_RAWREADINGS,
 } Custom_STM_Char_Opcode_t;
 
 typedef enum
 {
-  /* information */
-  CUSTOM_STM_INFO_C_READ_EVT,
+  /*  */
+  CUSTOM_STM_DMPREADINGS_READ_EVT,
+  CUSTOM_STM_DMPBIASES_READ_EVT,
+  CUSTOM_STM_RAWREADINGS_READ_EVT,
   CUSTOM_STM_NOTIFICATION_COMPLETE_EVT,
 
   CUSTOM_STM_BOOT_REQUEST_EVT
@@ -67,7 +71,7 @@ typedef struct
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
-extern uint16_t SizeInfo_C;
+extern uint16_t SizeDMPReadings, SizeDMPBiases, SizeRawReadings;
 
 /* USER CODE BEGIN EC */
 

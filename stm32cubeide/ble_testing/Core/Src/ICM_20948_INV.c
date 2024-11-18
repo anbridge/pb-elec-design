@@ -2688,7 +2688,7 @@ ICM_20948_Status_e icm20948_get_bias_cpass_x( int32_t* bias)
 ICM_20948_Status_e icm20948_get_bias_cpass_y( int32_t* bias)
 {
     unsigned char bias_data[4] = { 0 };
-    status = inv_icm20948_read_mems(CPASS_BIAS_Y, 4, bias_data);
+    status = icm20948_read_mem(CPASS_BIAS_Y, 4, bias_data);
     union {
       int32_t signed32;
       uint32_t unsigned32;

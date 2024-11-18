@@ -75,7 +75,10 @@ static void MX_RF_Init(void);
   * @brief  The application entry point.
   * @retval int
   */
-uint8_t char_buf[512];
+uint8_t dmp_readings_buf[512];
+uint8_t dmp_biases_buf[512];
+uint8_t sensors[3] = {LOWER_BACK, MID_BACK, UPPER_BACK};
+
 double q0, q1, q2, q3;
 
 int main(void)
@@ -120,12 +123,69 @@ int main(void)
 
   /* Init code for STM32_WPAN */
   MX_APPE_Init();
+  HAL_Delay(500);
 
   icm20948_set_i2c_bus(&hi2c1);
 
-  for(uint8_t i = 4; i < 6; i++)
-  {
-	  set_i2c_mux_index(&hi2c1, i);
+  set_up_icm20948_dmp(UPPER_BACK);
+  set_up_icm20948_dmp(MID_BACK);
+  set_up_icm20948_dmp(LOWER_BACK);
+
+  icm_20948_DMP_data_t dmp_data;
+  // NVIC_SystemReset(); // resets the
+  uint8_t i = 0;
+  while (1)
+   {
+ 	    /* USER CODE END WHILE */
+ 	    MX_APPE_Process();
+
+ 	    for(i = 0; i < sizeof(sensors); i++)
+ 	    {
+ 	    	set_i2c_mux_index(&hi2c1, sensors[i]);
+ 	    	int8_t result = icm20948_read_DMP_data(&dmp_data);
+ 	    	if ((dmp_data.header & DMP_header_bitmap_Quat9) > 0) // We have asked for orientation data so we should receive Quat
+ 	    		orientation_into_buffer(&dmp_data, dmp_readings_buf, i*32);
+
+ 	    	Custom_STM_App_Update_Char(0, (uint8_t *)dmp_readings_buf);
+ 	    }
+ 	    if(!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6))
+ 	    {
+ 	    	for(i = 0; i < sizeof(sensors); i++)
+ 	    		biases_to_buffer(sensors[i], dmp_biases_buf, i*36);
+
+ 	    	Custom_STM_App_Update_Char(1, (uint8_t *)dmp_biases_buf);
+ 	    }
+   }
+   /* USER CODE END 3 */
+ }
+
+void biases_to_buffer(uint8_t sensor, uint8_t *buffer, uint8_t start_index)
+{
+	set_i2c_mux_index(&hi2c1, sensor);
+	int32_t value;
+	icm20948_get_bias_accel_x(&value);
+	put_int32_in_buffer(value, buffer, 512, start_index);
+	icm20948_get_bias_accel_y(&value);
+	put_int32_in_buffer(value, buffer, 512, start_index+4);
+	icm20948_get_bias_accel_z(&value);
+	put_int32_in_buffer(value, buffer, 512, start_index+8);
+	icm20948_get_bias_gyro_x(&value);
+	put_int32_in_buffer(value, buffer, 512, start_index+12);
+	icm20948_get_bias_gyro_y(&value);
+	put_int32_in_buffer(value, buffer, 512, start_index+16);
+	icm20948_get_bias_gyro_z(&value);
+	put_int32_in_buffer(value, buffer, 512, start_index+20);
+	icm20948_get_bias_cpass_x(&value);
+	put_int32_in_buffer(value, buffer, 512, start_index+24);
+	icm20948_get_bias_cpass_y(&value);
+	put_int32_in_buffer(value, buffer, 512, start_index+28);
+	icm20948_get_bias_cpass_z(&value);
+	put_int32_in_buffer(value, buffer, 512, start_index+32);
+}
+
+void set_up_icm20948_dmp(uint8_t sensor)
+{
+	  set_i2c_mux_index(&hi2c1, sensor);
 	  icm20948_startup_default(true);
 	  if(icm20948_initialize_DMP())return;
 	  HAL_Delay(1000);
@@ -134,67 +194,26 @@ int main(void)
 	  icm20948_enable_FIFO(true);
 	  icm20948_enable_DMP(true);
 	  icm20948_reset_FIFO();
-
-	  /* Infinite loop */
-	  /* USER CODE BEGIN WHILE */
 	  icm20948_reset_DMP();
-  }
-  icm_20948_DMP_data_t dmp_data;
-  while (1)
-   {
- 	    /* USER CODE END WHILE */
- 	    MX_APPE_Process();
+}
 
- 	    set_i2c_mux_index(&hi2c1, 4);
-		int8_t result = icm20948_read_DMP_data(&dmp_data);
-		if ((dmp_data.header & DMP_header_bitmap_Quat9) > 0) // We have asked for orientation data so we should receive Quat9
-		{
-		  // Q0 value is computed from this equation: Q0^2 + Q1^2 + Q2^2 + Q3^2 = 1.
-		  // In case of drift, the sum will not add to 1, therefore, quaternion data need to be corrected with right bias values.
-		  // The quaternion data is scaled by 2^30.
+void orientation_into_buffer(icm_20948_DMP_data_t *dmp_data, uint8_t *buffer, uint16_t starting_point)
+{
 
-		  //SERIAL_PORT.printf("Quat9 data is: Q1:%ld Q2:%ld Q3:%ld Accuracy:%d\r\n", data.Quat9.Data.Q1, data.Quat9.Data.Q2, data.Quat9.Data.Q3, data.Quat9.Data.Accuracy);
+  // Q0 value is computed from this equation: Q0^2 + Q1^2 + Q2^2 + Q3^2 = 1.
+  // In case of drift, the sum will not add to 1, therefore, quaternion data need to be corrected with right bias values.
+  // The quaternion data is scaled by 2^30.
 
-		  // Scale to +/- 1
-		  q1 = ((double)dmp_data.Quat9.Data.Q1) / 1073741824.0; // Convert to double. Divide by 2^30
-		  q2 = ((double)dmp_data.Quat9.Data.Q2) / 1073741824.0; // Convert to double. Divide by 2^30
-		  q3 = ((double)dmp_data.Quat9.Data.Q3) / 1073741824.0; // Convert to double. Divide by 2^30
-		  q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
-		  put_double_in_buffer(q0, char_buf, sizeof(char_buf), 0);
-		  put_double_in_buffer(q1, char_buf, sizeof(char_buf), 8);
-		  put_double_in_buffer(q2, char_buf, sizeof(char_buf), 16);
-		  put_double_in_buffer(q3, char_buf, sizeof(char_buf), 24);
-		  Custom_STM_App_Update_Char(0, (uint8_t *)char_buf);
-		}
- 	    set_i2c_mux_index(&hi2c1, 5);
-		result = icm20948_read_DMP_data(&dmp_data);
-		if ((dmp_data.header & DMP_header_bitmap_Quat9) > 0) // We have asked for orientation data so we should receive Quat9
-		{
-		  // Q0 value is computed from this equation: Q0^2 + Q1^2 + Q2^2 + Q3^2 = 1.
-		  // In case of drift, the sum will not add to 1, therefore, quaternion data need to be corrected with right bias values.
-		  // The quaternion data is scaled by 2^30.
-
-		  //SERIAL_PORT.printf("Quat9 data is: Q1:%ld Q2:%ld Q3:%ld Accuracy:%d\r\n", data.Quat9.Data.Q1, data.Quat9.Data.Q2, data.Quat9.Data.Q3, data.Quat9.Data.Accuracy);
-
-		  // Scale to +/- 1
-		  q1 = ((double)dmp_data.Quat9.Data.Q1) / 1073741824.0; // Convert to double. Divide by 2^30
-		  q2 = ((double)dmp_data.Quat9.Data.Q2) / 1073741824.0; // Convert to double. Divide by 2^30
-		  q3 = ((double)dmp_data.Quat9.Data.Q3) / 1073741824.0; // Convert to double. Divide by 2^30
-		  q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
-		  put_double_in_buffer(q0, char_buf, sizeof(char_buf), 32);
-		  put_double_in_buffer(q1, char_buf, sizeof(char_buf), 40);
-		  put_double_in_buffer(q2, char_buf, sizeof(char_buf), 48);
-		  put_double_in_buffer(q3, char_buf, sizeof(char_buf), 56);
-		  Custom_STM_App_Update_Char(0, (uint8_t *)char_buf);
-		}
-		if(result != ICM_20948_Stat_FIFOMoreDataAvail)
-			HAL_Delay(10);
-
-
-   }
-   /* USER CODE END 3 */
- }
-
+  // Scale to +/- 1
+  q1 = ((double)dmp_data->Quat9.Data.Q1) / 1073741824.0; // Convert to double. Divide by 2^30
+  q2 = ((double)dmp_data->Quat9.Data.Q2) / 1073741824.0; // Convert to double. Divide by 2^30
+  q3 = ((double)dmp_data->Quat9.Data.Q3) / 1073741824.0; // Convert to double. Divide by 2^30
+  q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
+  put_double_in_buffer(q0, buffer, 512, starting_point);
+  put_double_in_buffer(q1, buffer, 512, starting_point+8);
+  put_double_in_buffer(q2, buffer, 512, starting_point+16);
+  put_double_in_buffer(q3, buffer, 512, starting_point+24);
+}
 
 /**
   * @brief System Clock Configuration

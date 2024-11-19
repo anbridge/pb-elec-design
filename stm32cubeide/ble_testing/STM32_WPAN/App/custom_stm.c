@@ -28,13 +28,15 @@
 
 /* Private typedef -----------------------------------------------------------*/
 typedef struct{
-  uint16_t  CustomPressctrHdle;                    /**< PressCounter handle */
-  uint16_t  CustomInfo_CHdle;                  /**< information handle */
+  uint16_t  SensorsHandle;                    /**< Service (sensor readings) handle */
+  uint16_t  DMPReadings_CHandle;                  /**< DMP readings handle */
+  uint16_t  DMPBiases_CHandle;                  /**< DMP biases handle */
+  uint16_t  RawReadings_CHandle;                  /**< Raw sensor readings handle */
 /* USER CODE BEGIN Context */
   /* Place holder for Characteristic Descriptors Handle*/
 
 /* USER CODE END Context */
-}CustomContext_t;
+}Context_t;
 
 extern uint16_t Connection_Handle;
 /* USER CODE BEGIN PTD */
@@ -64,12 +66,15 @@ extern uint16_t Connection_Handle;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-uint16_t SizeInfo_C = 64; // 2 x 4x8byte doubles
+uint16_t SizeDMPReadings = 96; // 3 x (4x8byte doubles)
+uint16_t SizeDMPBiases = 108; // 3 x (3x3x4byte int32_t)
+uint16_t SizeRawReadings = 120; // 3 x ( 3x4byte floats accel + 3x4byte floats gyro + 3x4byte floats magneto + 4byte float temp)
+
 
 /**
  * START of Section BLE_DRIVER_CONTEXT
  */
-static CustomContext_t CustomContext;
+static Context_t ble_context;
 
 /**
  * END of Section BLE_DRIVER_CONTEXT
@@ -103,8 +108,11 @@ do {\
     uuid_struct[12] = uuid_12; uuid_struct[13] = uuid_13; uuid_struct[14] = uuid_14; uuid_struct[15] = uuid_15; \
 }while(0)
 
-#define COPY_PRESSCOUNTER_UUID(uuid_struct)          COPY_UUID_128(uuid_struct,0x00,0x00,0x18,0x01,0xcc,0x7a,0x48,0x2a,0x98,0x4a,0x7f,0x2e,0xd5,0xb3,0xe5,0x8f)
-#define COPY_INFORMATION_UUID(uuid_struct)    COPY_UUID_128(uuid_struct,0x00,0x00,0x12,0x34,0x8e,0x22,0x45,0x41,0x9d,0x4c,0x21,0xed,0xae,0x82,0xed,0x19)
+#define COPY_SENSORS_UUID(uuid_struct)          COPY_UUID_128(uuid_struct,0x00,0x00,0x18,0x01,0xcc,0x7a,0x48,0x2a,0x98,0x4a,0x7f,0x2e,0xd5,0xb3,0xe5,0x8f)
+#define COPY_DMPREADINGS_UUID(uuid_struct)    COPY_UUID_128(uuid_struct,0x00,0x00,0x12,0x34,0x8e,0x22,0x45,0x41,0x9d,0x4c,0x21,0xed,0xae,0x82,0xed,0x19)
+#define COPY_DMPBIASES_UUID(uuid_struct)    COPY_UUID_128(uuid_struct,0x00,0x00,0x12,0x35,0x8e,0x22,0x45,0x41,0x9d,0x4c,0x21,0xed,0xae,0x82,0xed,0x19)
+#define COPY_RAWREADINGS_UUID(uuid_struct)    COPY_UUID_128(uuid_struct,0x00,0x00,0x12,0x36,0x8e,0x22,0x45,0x41,0x9d,0x4c,0x21,0xed,0xae,0x82,0xed,0x19)
+
 
 /* USER CODE BEGIN PF */
 
@@ -233,58 +241,104 @@ void SVCCTL_InitCustomSvc(void)
   SVCCTL_RegisterSvcHandler(Custom_STM_Event_Handler);
 
   /**
-   *          PressCounter
+   *          Sensors
    *
    * Max_Attribute_Records = 1 + 2*1 + 1*no_of_char_with_notify_or_indicate_property + 1*no_of_char_with_broadcast_property
-   * service_max_attribute_record = 1 for PressCounter +
-   *                                2 for information +
-   *                              = 3
+   * service_max_attribute_record = 1 for Sensors +
+   *                                2 for DMP Readings +
+   *                                2 for DMP Biases +
+   *                                2 for Raw Readings
+   *                              = 7
    *
    * This value doesn't take into account number of descriptors manually added
    * In case of descriptors added, please update the max_attr_record value accordingly in the next SVCCTL_InitService User Section
    */
-  max_attr_record = 3;
+  max_attr_record = 7;
 
   /* USER CODE BEGIN SVCCTL_InitService */
   /* max_attr_record to be updated if descriptors have been added */
 
   /* USER CODE END SVCCTL_InitService */
 
-  COPY_PRESSCOUNTER_UUID(uuid.Char_UUID_128);
+  COPY_SENSORS_UUID(uuid.Char_UUID_128);
   ret = aci_gatt_add_service(UUID_TYPE_128,
                              (Service_UUID_t *) &uuid,
                              PRIMARY_SERVICE,
                              max_attr_record,
-                             &(CustomContext.CustomPressctrHdle));
+                             &(ble_context.SensorsHandle));
   if (ret != BLE_STATUS_SUCCESS)
   {
-    APP_DBG_MSG("  Fail   : aci_gatt_add_service command: PressCtr, error code: 0x%x \n\r", ret);
+    APP_DBG_MSG("  Fail   : aci_gatt_add_service command: Sensors, error code: 0x%x \n\r", ret);
   }
   else
   {
-    APP_DBG_MSG("  Success: aci_gatt_add_service command: PressCtr \n\r");
+    APP_DBG_MSG("  Success: aci_gatt_add_service command: Sensors \n\r");
   }
 
   /**
-   *  information
+   *  DMP Readings
    */
-  COPY_INFORMATION_UUID(uuid.Char_UUID_128);
-  ret = aci_gatt_add_char(CustomContext.CustomPressctrHdle,
+  COPY_DMPREADINGS_UUID(uuid.Char_UUID_128);
+  ret = aci_gatt_add_char(ble_context.SensorsHandle,
                           UUID_TYPE_128, &uuid,
-                          SizeInfo_C,
+                          SizeDMPReadings,
                           CHAR_PROP_READ,
                           ATTR_PERMISSION_NONE,
                           GATT_DONT_NOTIFY_EVENTS,
                           0x10,
                           CHAR_VALUE_LEN_CONSTANT,
-                          &(CustomContext.CustomInfo_CHdle));
+                          &(ble_context.DMPReadings_CHandle));
   if (ret != BLE_STATUS_SUCCESS)
   {
-    APP_DBG_MSG("  Fail   : aci_gatt_add_char command   : INFO_C, error code: 0x%x \n\r", ret);
+    APP_DBG_MSG("  Fail   : aci_gatt_add_char command   : DMPReadings, error code: 0x%x \n\r", ret);
   }
   else
   {
-    APP_DBG_MSG("  Success: aci_gatt_add_char command   : INFO_C \n\r");
+    APP_DBG_MSG("  Success: aci_gatt_add_char command   : DMPReadings \n\r");
+  }
+
+  /*
+   * DMP Biases
+   */
+  COPY_DMPBIASES_UUID(uuid.Char_UUID_128);
+  ret = aci_gatt_add_char(ble_context.SensorsHandle,
+						UUID_TYPE_128, &uuid,
+						SizeDMPBiases,
+						CHAR_PROP_READ,
+						ATTR_PERMISSION_NONE,
+						GATT_DONT_NOTIFY_EVENTS,
+						0x10,
+						CHAR_VALUE_LEN_CONSTANT,
+						&(ble_context.DMPBiases_CHandle));
+  if (ret != BLE_STATUS_SUCCESS)
+  {
+	APP_DBG_MSG("  Fail   : aci_gatt_add_char command   : DMPBiases, error code: 0x%x \n\r", ret);
+  }
+  else
+  {
+	APP_DBG_MSG("  Success: aci_gatt_add_char command   : DMPBiases \n\r");
+  }
+
+  /*
+   * Raw Readings
+   */
+  COPY_RAWREADINGS_UUID(uuid.Char_UUID_128);
+  ret = aci_gatt_add_char(ble_context.SensorsHandle,
+						UUID_TYPE_128, &uuid,
+						SizeRawReadings,
+						CHAR_PROP_READ,
+						ATTR_PERMISSION_NONE,
+						GATT_DONT_NOTIFY_EVENTS,
+						0x10,
+						CHAR_VALUE_LEN_CONSTANT,
+						&(ble_context.RawReadings_CHandle));
+  if (ret != BLE_STATUS_SUCCESS)
+  {
+	APP_DBG_MSG("  Fail   : aci_gatt_add_char command   : RawReadings, error code: 0x%x \n\r", ret);
+  }
+  else
+  {
+	APP_DBG_MSG("  Success: aci_gatt_add_char command   : RawReadings \n\r");
   }
 
   /* USER CODE BEGIN SVCCTL_Init_Service1_Char1 */
@@ -315,25 +369,42 @@ tBleStatus Custom_STM_App_Update_Char(Custom_STM_Char_Opcode_t CharOpcode, uint8
   switch (CharOpcode)
   {
 
-    case CUSTOM_STM_INFO_C:
-      ret = aci_gatt_update_char_value(CustomContext.CustomPressctrHdle,
-                                       CustomContext.CustomInfo_CHdle,
+    case CUSTOM_STM_DMPREADINGS:
+      ret = aci_gatt_update_char_value(ble_context.SensorsHandle,
+                                       ble_context.DMPReadings_CHandle,
                                        0, /* charValOffset */
-                                       SizeInfo_C, /* charValueLen */
+                                       SizeDMPReadings, /* charValueLen */
                                        (uint8_t *)  pPayload);
       if (ret != BLE_STATUS_SUCCESS)
       {
-        APP_DBG_MSG("  Fail   : aci_gatt_update_char_value INFO_C command, result : 0x%x \n\r", ret);
+        APP_DBG_MSG("  Fail   : aci_gatt_update_char_value DMPREADINGS command, result : 0x%x \n\r", ret);
       }
       else
       {
-        APP_DBG_MSG("  Success: aci_gatt_update_char_value INFO_C command\n\r");
+        APP_DBG_MSG("  Success: aci_gatt_update_char_value DMPREADINGS command\n\r");
       }
       /* USER CODE BEGIN CUSTOM_STM_App_Update_Service_1_Char_1*/
 
       /* USER CODE END CUSTOM_STM_App_Update_Service_1_Char_1*/
       break;
+    case CUSTOM_STM_DMPBIASES:
+      ret = aci_gatt_update_char_value(ble_context.SensorsHandle,
+                                       ble_context.DMPBiases_CHandle,
+                                       0, /* charValOffset */
+                                       SizeDMPBiases, /* charValueLen */
+                                       (uint8_t *)  pPayload);
+      if (ret != BLE_STATUS_SUCCESS)
+      {
+        APP_DBG_MSG("  Fail   : aci_gatt_update_char_value DMPBIASES command, result : 0x%x \n\r", ret);
+      }
+      else
+      {
+        APP_DBG_MSG("  Success: aci_gatt_update_char_value DMPBIASES command\n\r");
+      }
+      /* USER CODE BEGIN CUSTOM_STM_App_Update_Service_1_Char_1*/
 
+      /* USER CODE END CUSTOM_STM_App_Update_Service_1_Char_1*/
+      break;
     default:
       break;
   }
@@ -362,9 +433,9 @@ tBleStatus Custom_STM_App_Update_Char_Variable_Length(Custom_STM_Char_Opcode_t C
   switch (CharOpcode)
   {
 
-    case CUSTOM_STM_INFO_C:
-      ret = aci_gatt_update_char_value(CustomContext.CustomPressctrHdle,
-                                       CustomContext.CustomInfo_CHdle,
+    case CUSTOM_STM_DMPREADINGS:
+      ret = aci_gatt_update_char_value(ble_context.SensorsHandle,
+    		  	  	  	  	  	  	   ble_context.DMPReadings_CHandle,
                                        0, /* charValOffset */
                                        size, /* charValueLen */
                                        (uint8_t *)  pPayload);
@@ -409,11 +480,11 @@ tBleStatus Custom_STM_App_Update_Char_Ext(uint16_t Connection_Handle, Custom_STM
   switch (CharOpcode)
   {
 
-    case CUSTOM_STM_INFO_C:
+    case CUSTOM_STM_DMPREADINGS:
       /* USER CODE BEGIN Updated_Length_Service_1_Char_1*/
 
       /* USER CODE END Updated_Length_Service_1_Char_1*/
-	  Generic_STM_App_Update_Char_Ext(Connection_Handle, CustomContext.CustomPressctrHdle, CustomContext.CustomInfo_CHdle, SizeInfo_C, pPayload);
+	  Generic_STM_App_Update_Char_Ext(Connection_Handle, ble_context.SensorsHandle, ble_context.DMPReadings_CHandle, SizeDMPReadings, pPayload);
 
       break;
 

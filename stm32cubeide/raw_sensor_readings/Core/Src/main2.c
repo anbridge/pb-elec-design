@@ -75,11 +75,8 @@ static void MX_RF_Init(void);
   * @brief  The application entry point.
   * @retval int
   */
-uint8_t dmp_readings_buf[512];
-uint8_t dmp_biases_buf[512];
-uint8_t sensors[3] = {LOWER_BACK, MID_BACK, UPPER_BACK};
-
-double q0, q1, q2, q3;
+uint8_t char_buf[512];
+double q0, q1, q2, q3 = 0.0;
 
 int main(void)
 {
@@ -123,97 +120,105 @@ int main(void)
 
   /* Init code for STM32_WPAN */
   MX_APPE_Init();
-  HAL_Delay(500);
 
   icm20948_set_i2c_bus(&hi2c1);
+  set_i2c_mux_index(&hi2c1, 4);
 
-  set_up_icm20948_dmp(UPPER_BACK);
-  set_up_icm20948_dmp(MID_BACK);
-  set_up_icm20948_dmp(LOWER_BACK);
+  icm20948_startup_default(false); // false = non-minimal startup
+  icm20948_sw_reset();
+  HAL_Delay(250);
+  icm20948_sleep(false);
+  icm20948_low_power(false);
+  icm20948_set_sample_mode((ICM_20948_Internal_Acc | ICM_20948_Internal_Gyr), ICM_20948_Sample_Mode_Continuous);
 
-  icm_20948_DMP_data_t dmp_data;
-  // NVIC_SystemReset(); // resets the
-  uint8_t i = 0;
+  // Set full scale ranges for both acc and gyr
+  ICM_20948_fss_t myFSS; // This uses a "Full Scale Settings" structure that can contain values for all configurable sensors
+
+  myFSS.a = gpm2; // (ICM_20948_ACCEL_CONFIG_FS_SEL_e)
+                  // gpm2
+                  // gpm4
+                  // gpm8
+                  // gpm16
+
+  myFSS.g = dps250; // (ICM_20948_GYRO_CONFIG_1_FS_SEL_e)
+                    // dps250
+                    // dps500
+                    // dps1000
+                    // dps2000
+  icm20948_set_full_scale((ICM_20948_Internal_Acc | ICM_20948_Internal_Gyr), myFSS);
+
+  ICM_20948_dlpcfg_t myDLPcfg;    // Similar to FSS, this uses a configuration structure for the desired sensors
+  myDLPcfg.a = acc_d473bw_n499bw; // (ICM_20948_ACCEL_CONFIG_DLPCFG_e)
+                                  // acc_d246bw_n265bw      - means 3db bandwidth is 246 hz and nyquist bandwidth is 265 hz
+                                  // acc_d111bw4_n136bw
+                                  // acc_d50bw4_n68bw8
+                                  // acc_d23bw9_n34bw4
+                                  // acc_d11bw5_n17bw
+                                  // acc_d5bw7_n8bw3        - means 3 db bandwidth is 5.7 hz and nyquist bandwidth is 8.3 hz
+                                  // acc_d473bw_n499bw
+
+  myDLPcfg.g = gyr_d361bw4_n376bw5; // (ICM_20948_GYRO_CONFIG_1_DLPCFG_e)
+                                    // gyr_d196bw6_n229bw8
+                                    // gyr_d151bw8_n187bw6
+                                    // gyr_d119bw5_n154bw3
+                                    // gyr_d51bw2_n73bw3
+                                    // gyr_d23bw9_n35bw9
+                                    // gyr_d11bw6_n17bw8
+                                    // gyr_d5bw7_n8bw9
+                                    // gyr_d361bw4_n376bw5
+  icm20948_set_dlpf_cfg((ICM_20948_Internal_Acc | ICM_20948_Internal_Gyr), myDLPcfg);
+  icm20948_enable_dlpf(ICM_20948_Internal_Acc, false);
+  icm20948_enable_dlpf(ICM_20948_Internal_Gyr, false);
+  icm20948_startup_magnetometer(false);
+
+
+  ICM_20948_AGMT_t main_agmt;
+
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+
   while (1)
    {
  	    /* USER CODE END WHILE */
  	    MX_APPE_Process();
 
- 	    for(i = 0; i < sizeof(sensors); i++)
- 	    {
- 	    	set_i2c_mux_index(&hi2c1, sensors[i]);
- 	    	int8_t result = icm20948_read_DMP_data(&dmp_data);
- 	    	if ((dmp_data.header & DMP_header_bitmap_Quat9) > 0) // We have asked for orientation data so we should receive Quat
- 	    		orientation_into_buffer(&dmp_data, dmp_readings_buf, i*32);
+		if (icm20948_data_ready() == ICM_20948_Stat_Ok) // We have asked for orientation data so we should receive Quat9
+		{
+			icm20948_get_agmt(&main_agmt);
+			///*
+			// *
+			 //accel
+			put_float_in_buffer(icm20948_accel_x(&main_agmt), char_buf, sizeof(char_buf), 0);
+			put_float_in_buffer(icm20948_accel_y(&main_agmt), char_buf, sizeof(char_buf), 4);
+			put_float_in_buffer(icm20948_accel_z(&main_agmt), char_buf, sizeof(char_buf), 8);
+			//gyro
+			put_float_in_buffer(icm20948_gyro_x(&main_agmt), char_buf, sizeof(char_buf), 12);
+			put_float_in_buffer(icm20948_gyro_y(&main_agmt), char_buf, sizeof(char_buf), 16);
+			put_float_in_buffer(icm20948_gyro_z(&main_agmt), char_buf, sizeof(char_buf), 20);
+			//magneto
+			put_float_in_buffer(icm20948_mag_x(&main_agmt), char_buf, sizeof(char_buf), 24);
+			put_float_in_buffer(icm20948_mag_y(&main_agmt), char_buf, sizeof(char_buf), 28);
+			put_float_in_buffer(icm20948_mag_z(&main_agmt), char_buf, sizeof(char_buf), 32);
+			//temp
+			put_float_in_buffer(icm20948_temp_celsius(&main_agmt), char_buf, sizeof(char_buf), 36);
+			//*/
+			/*
+			  put_double_in_buffer(q0, char_buf, sizeof(char_buf), 0);
+			  put_double_in_buffer(q1, char_buf, sizeof(char_buf), 8);
+			  put_double_in_buffer(q2, char_buf, sizeof(char_buf), 16);
+			  put_double_in_buffer(q3, char_buf, sizeof(char_buf), 24);
+			 //*/
 
- 	    	Custom_STM_App_Update_Char(0, (uint8_t *)dmp_readings_buf);
- 	    }
- 	    if(!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6))
- 	    {
- 	    	for(i = 0; i < sizeof(sensors); i++)
- 	    		biases_to_buffer(sensors[i], dmp_biases_buf, i*36);
+			Custom_STM_App_Update_Char(0, (uint8_t *)char_buf);
+		}
+		HAL_Delay(15);
 
- 	    	Custom_STM_App_Update_Char(1, (uint8_t *)dmp_biases_buf);
- 	    }
+
    }
    /* USER CODE END 3 */
  }
 
-void biases_to_buffer(uint8_t sensor, uint8_t *buffer, uint8_t start_index)
-{
-	set_i2c_mux_index(&hi2c1, sensor);
-	int32_t value;
-	icm20948_get_bias_accel_x(&value);
-	put_int32_in_buffer(value, buffer, 512, start_index);
-	icm20948_get_bias_accel_y(&value);
-	put_int32_in_buffer(value, buffer, 512, start_index+4);
-	icm20948_get_bias_accel_z(&value);
-	put_int32_in_buffer(value, buffer, 512, start_index+8);
-	icm20948_get_bias_gyro_x(&value);
-	put_int32_in_buffer(value, buffer, 512, start_index+12);
-	icm20948_get_bias_gyro_y(&value);
-	put_int32_in_buffer(value, buffer, 512, start_index+16);
-	icm20948_get_bias_gyro_z(&value);
-	put_int32_in_buffer(value, buffer, 512, start_index+20);
-	icm20948_get_bias_cpass_x(&value);
-	put_int32_in_buffer(value, buffer, 512, start_index+24);
-	icm20948_get_bias_cpass_y(&value);
-	put_int32_in_buffer(value, buffer, 512, start_index+28);
-	icm20948_get_bias_cpass_z(&value);
-	put_int32_in_buffer(value, buffer, 512, start_index+32);
-}
-
-void set_up_icm20948_dmp(uint8_t sensor)
-{
-	  set_i2c_mux_index(&hi2c1, sensor);
-	  icm20948_startup_default(true);
-	  if(icm20948_initialize_DMP())return;
-	  HAL_Delay(1000);
-	  if(icm20948_enable_DMP_sensor(INV_ICM20948_SENSOR_ORIENTATION, 1))return;
-	  if(icm20948_set_DMP_sensor_period(DMP_ODR_Reg_Quat9, 0))return;
-	  icm20948_enable_FIFO(true);
-	  icm20948_enable_DMP(true);
-	  icm20948_reset_FIFO();
-	  icm20948_reset_DMP();
-}
-
-void orientation_into_buffer(icm_20948_DMP_data_t *dmp_data, uint8_t *buffer, uint16_t starting_point)
-{
-
-  // Q0 value is computed from this equation: Q0^2 + Q1^2 + Q2^2 + Q3^2 = 1.
-  // In case of drift, the sum will not add to 1, therefore, quaternion data need to be corrected with right bias values.
-  // The quaternion data is scaled by 2^30.
-
-  // Scale to +/- 1
-  q1 = ((double)dmp_data->Quat9.Data.Q1) / 1073741824.0; // Convert to double. Divide by 2^30
-  q2 = ((double)dmp_data->Quat9.Data.Q2) / 1073741824.0; // Convert to double. Divide by 2^30
-  q3 = ((double)dmp_data->Quat9.Data.Q3) / 1073741824.0; // Convert to double. Divide by 2^30
-  q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
-  put_double_in_buffer(q0, buffer, 512, starting_point);
-  put_double_in_buffer(q1, buffer, 512, starting_point+8);
-  put_double_in_buffer(q2, buffer, 512, starting_point+16);
-  put_double_in_buffer(q3, buffer, 512, starting_point+24);
-}
 
 /**
   * @brief System Clock Configuration

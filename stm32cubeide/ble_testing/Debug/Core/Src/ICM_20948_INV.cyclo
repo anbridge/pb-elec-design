@@ -72,4 +72,5 @@
 ../Core/Src/ICM_20948_INV.c:2675:20:icm20948_get_bias_cpass_x	1
 ../Core/Src/ICM_20948_INV.c:2688:20:icm20948_get_bias_cpass_y	1
 ../Core/Src/ICM_20948_INV.c:2701:20:icm20948_get_bias_cpass_z	1
-../Core/Src/ICM_20948_INV.c:2714:7:icm20948_temp_celcius	1
+../Core/Src/ICM_20948_INV.c:2714:7:icm20948_temp_celsius	1
+../Core/Src/ICM_20948_INV.c:2719:20:icm20948_data_ready	4

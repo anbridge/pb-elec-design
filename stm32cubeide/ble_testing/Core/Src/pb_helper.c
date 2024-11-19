@@ -33,3 +33,17 @@ void put_float_in_buffer(float ft, uint8_t *buffer, int buffer_length, int start
 		buffer[starting_index+i] = float_to_bytes.bytes[i];
 	}
 }
+
+void put_int32_in_buffer(int32_t i, uint8_t *buffer, int buffer_length, int starting_index)
+{
+	if((starting_index + sizeof(int32_t)) > buffer_length)return;
+	  union {
+	    int32_t intl;
+	    unsigned char bytes[sizeof(int32_t)];
+	  } int32_to_bytes;
+	int32_to_bytes.intl = i;
+	for(int i = 0; i < sizeof(int32_t); i++){
+		buffer[starting_index+i] = int32_to_bytes.bytes[i];
+	}
+}
+

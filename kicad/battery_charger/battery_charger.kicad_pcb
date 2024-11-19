@@ -1607,7 +1607,7 @@
 		(descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "resistor")
 		(property "Reference" "R11"
-			(at -0.825 -1 0)
+			(at -0.625 -1 0)
 			(layer "F.SilkS")
 			(uuid "8ef346a0-decc-4911-85e4-21b264bbf411")
 			(effects
@@ -2336,7 +2336,7 @@
 		(descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "resistor")
 		(property "Reference" "R12"
-			(at -0.825 -1 0)
+			(at -0.625 -1 0)
 			(layer "F.SilkS")
 			(uuid "910d0e0e-fa86-4700-a040-d4dcbf4f0b6b")
 			(effects
@@ -3300,8 +3300,8 @@
 		(at 139.345 87 180)
 		(descr "LED SMD 0201 (0603 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: https://www.vishay.com/docs/20052/crcw0201e3.pdf), generated with kicad-footprint-generator")
 		(tags "LED")
-		(property "Reference" "D8"
-			(at 0.345 0.75 0)
+		(property "Reference" "100%"
+			(at -0.055 0.75 0)
 			(layer "F.SilkS")
 			(uuid "cc8621a9-7c50-4eff-ab8b-e9bd3c227067")
 			(effects
@@ -5122,8 +5122,8 @@
 		(at 139.25 82.5 180)
 		(descr "LED SMD 0201 (0603 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: https://www.vishay.com/docs/20052/crcw0201e3.pdf), generated with kicad-footprint-generator")
 		(tags "LED")
-		(property "Reference" "D6"
-			(at 0.25 0.75 0)
+		(property "Reference" "50%"
+			(at -0.1 0.7 0)
 			(layer "F.SilkS")
 			(uuid "0825fcc0-cfcc-4805-bb7d-b361354febd1")
 			(effects
@@ -5575,8 +5575,8 @@
 		(at 133 88.25)
 		(descr "LED SMD 0201 (0603 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: https://www.vishay.com/docs/20052/crcw0201e3.pdf), generated with kicad-footprint-generator")
 		(tags "LED")
-		(property "Reference" "D5"
-			(at 1.25 0.25 0)
+		(property "Reference" "25%"
+			(at 1.6 0.15 0)
 			(layer "F.SilkS")
 			(uuid "eed6bc3d-abc7-4bd1-8f43-9d8d23015f05")
 			(effects
@@ -7047,8 +7047,8 @@
 		(at 139.325 84.75 180)
 		(descr "LED SMD 0201 (0603 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: https://www.vishay.com/docs/20052/crcw0201e3.pdf), generated with kicad-footprint-generator")
 		(tags "LED")
-		(property "Reference" "D7"
-			(at 0.325 0.75 0)
+		(property "Reference" "75%"
+			(at -0.075 0.75 0)
 			(layer "F.SilkS")
 			(uuid "5a586752-7769-4ce4-b7ec-0c65b3535534")
 			(effects

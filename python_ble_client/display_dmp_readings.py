@@ -34,7 +34,7 @@ ax.axes.set_zlim3d(bottom=-1, top=1)
 ax.set_box_aspect([1,1,1])
 
 qfixed = quaternion(0.5, 0.5, 0.5, 0.5)
-adjustments = [ quaternion(0.707, 0, 0, 0.707), quaternion(1, 0, 0, 0), quaternion(0.707, 0, 0, 0.707) ]
+adjustments = [None, None, None] 
 
 # 
 def adjust_to_master_orientation(initial_points, i_t, i_p, i_n,  q_pt0):
@@ -117,7 +117,9 @@ async def main(address):
             num_imus = int(len(quat_doubles)/4);
             for i in range(num_imus):
                 qd = quat_doubles[i*4:i*4+4]
-                q = adjustments[i]*from_float_array(qd)
+                if adjustments[i] == None:
+                    pass #adjustments[i] 
+                q = from_float_array(qd)
                 q_c = q.conjugate()
                 t = q * y * q_c
                 p = q * x * q_c
@@ -138,9 +140,9 @@ async def main(address):
             for i in range(num_imus): 
                 ts = tangents[i]; ps = perpendiculars[i]; ns = normals[i]
                 base = points_i[i] #imu_pos[i]
-                ax.plot( xs=(base.x-0.15*ts.x, base.x+0.15*ts.x), ys=(base.y-0.15*ts.y, base.y+0.15*ts.y), zs=(base.z-0.15*ts.z, base.z+0.15*ts.z), c='red')
-                ax.plot( xs=(base.x-0.15*ps.x, base.x+0.15*ps.x), ys=(base.y-0.15*ps.y, base.y+0.15*ps.y), zs=(base.z-0.15*ps.z, base.z+0.15*ps.z), c='green')
-                ax.plot( xs=(base.x-0.15*ns.x, base.x+0.15*ns.x), ys=(base.y-0.15*ns.y, base.y+0.15*ns.y), zs=(base.z-0.15*ns.z, base.z+0.15*ns.z), c='blue')
+                ax.plot( xs=(base.x-0.05*ts.x, base.x+0.15*ts.x), ys=(base.y-0.05*ts.y, base.y+0.15*ts.y), zs=(base.z-0.05*ts.z, base.z+0.15*ts.z), c='red')
+                ax.plot( xs=(base.x-0.05*ps.x, base.x+0.15*ps.x), ys=(base.y-0.05*ps.y, base.y+0.15*ps.y), zs=(base.z-0.05*ps.z, base.z+0.15*ps.z), c='green')
+                ax.plot( xs=(base.x-0.05*ns.x, base.x+0.15*ns.x), ys=(base.y-0.05*ns.y, base.y+0.15*ns.y), zs=(base.z-0.05*ns.z, base.z+0.15*ns.z), c='blue')
 
             # draw interpolated spine
             #for i in range(len(pts)):

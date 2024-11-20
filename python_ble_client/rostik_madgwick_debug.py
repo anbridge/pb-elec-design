@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import asyncio
 import array
 from bleak import BleakClient
-from mathutils import Vector
 
 
 plt.ion()
@@ -44,7 +43,6 @@ async def main(address):
             for c in s.characteristics:
                 print(c)
 
-        points_i = [ Vector((0,-1,0)), Vector((0,0,0)), Vector((0,1,0))]
         while 1:
             ax.axes.set_xlim3d(left=-1, right=1)
             ax.axes.set_ylim3d(bottom=-1, top=1)
@@ -73,17 +71,15 @@ async def main(address):
                 t = q * y * q_c
                 p = q * x * q_c
                 n = q * z * q_c
-                tangents.append(Vector((t.x, t.y, t.z))); perpendiculars.append(Vector((p.x, p.y, p.z))); normals.append(Vector((n.x, n.y, n.z)))
-            points, tangents, perpendiculars, new_normals = adjust_to_master_orientation( points, tangents, perpendicularss, normals, orientation)
-            imu_pos, pts, prps = generate_spine(points_i, tangents, perpendiculars, 10)
+                tangents.append(t); perpendiculars.append(p); normals.append(n)
             # draw imus with orientations
             for i in range(num_imus): 
                 ts = tangents[i]; ps = perpendiculars[i]; ns = normals[i]
-                base = points_i[i] #imu_pos[i]
+                base = quaternion(1,0,0,0)
                 ax.plot( xs=(base.x-0.05*ts.x, base.x+0.15*ts.x), ys=(base.y-0.05*ts.y, base.y+0.15*ts.y), zs=(base.z-0.05*ts.z, base.z+0.15*ts.z), c='red')
                 ax.plot( xs=(base.x-0.05*ps.x, base.x+0.15*ps.x), ys=(base.y-0.05*ps.y, base.y+0.15*ps.y), zs=(base.z-0.05*ps.z, base.z+0.15*ps.z), c='green')
                 ax.plot( xs=(base.x-0.05*ns.x, base.x+0.15*ns.x), ys=(base.y-0.05*ns.y, base.y+0.15*ns.y), zs=(base.z-0.05*ns.z, base.z+0.15*ns.z), c='blue')
-
+            plt.pause(0.05)
             ax.clear()
 
 

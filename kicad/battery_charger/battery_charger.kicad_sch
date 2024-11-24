@@ -1000,7 +1000,7 @@
 				)
 			)
 		)
-		(symbol "Device:Q_PMOS_DSG"
+		(symbol "Device:Q_PMOS_GSD"
 			(pin_names
 				(offset 0) hide)
 			(exclude_from_sim no)
@@ -1015,7 +1015,7 @@
 					(justify left)
 				)
 			)
-			(property "Value" "Q_PMOS_DSG"
+			(property "Value" "Q_PMOS_GSD"
 				(at 5.08 -1.27 0)
 				(effects
 					(font
@@ -1042,7 +1042,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "P-MOSFET transistor, drain/source/gate"
+			(property "Description" "P-MOSFET transistor, gate/source/drain"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1060,7 +1060,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "Q_PMOS_DSG_0_1"
+			(symbol "Q_PMOS_GSD_0_1"
 				(polyline
 					(pts
 						(xy 0.254 0) (xy -2.54 0)
@@ -1227,11 +1227,11 @@
 					)
 				)
 			)
-			(symbol "Q_PMOS_DSG_1_1"
-				(pin passive line
-					(at 2.54 5.08 270)
+			(symbol "Q_PMOS_GSD_1_1"
+				(pin input line
+					(at -5.08 0 0)
 					(length 2.54)
-					(name "D"
+					(name "G"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1264,10 +1264,10 @@
 						)
 					)
 				)
-				(pin input line
-					(at -5.08 0 0)
+				(pin passive line
+					(at 2.54 5.08 270)
 					(length 2.54)
-					(name "G"
+					(name "D"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3352,76 +3352,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:Q_PMOS_DSG")
-		(at 151.13 81.28 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "0d1778f0-9650-453c-b411-98950c08521f")
-		(property "Reference" "Q1"
-			(at 155.194 85.598 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "Q_PMOS_DSG"
-			(at 155.194 88.138 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Package_DirectFET:DirectFET_MX"
-			(at 153.67 86.36 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 151.13 81.28 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "P-MOSFET transistor, drain/source/gate"
-			(at 151.13 81.28 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "5d2d0826-b147-4221-b039-10b13da40e95")
-		)
-		(pin "1"
-			(uuid "2ce4700a-e2e6-49d8-b0d7-f7270716bcb5")
-		)
-		(pin "3"
-			(uuid "af4909f4-38c0-4568-9d30-da9dcdafc7d9")
-		)
-		(instances
-			(project ""
-				(path "/add37744-b832-4f24-98d5-20347e778715"
-					(reference "Q1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 120.65 77.47 0)
 		(unit 1)
@@ -3582,7 +3512,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_Push_1P1T-MP_NO_Horizontal_Alps_SKRTLAE010"
+		(property "Footprint" "Button_Switch_SMD:SW_SPST_B3U-1000P"
 			(at 139.7 95.25 0)
 			(effects
 				(font
@@ -3979,6 +3909,76 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:Q_PMOS_GSD")
+		(at 151.13 81.28 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "5016ddd3-e92b-4e6c-8a63-140cc8ca33a6")
+		(property "Reference" "Q1"
+			(at 151.13 87.63 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Q_PMOS_GSD"
+			(at 156.718 90.17 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-3"
+			(at 153.67 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 151.13 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "P-MOSFET transistor, gate/source/drain"
+			(at 151.13 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "3"
+			(uuid "675166a6-3f55-420b-bc12-bc510a26a7ba")
+		)
+		(pin "2"
+			(uuid "b01db2d3-ad56-4be8-93c1-35a3dd511e6f")
+		)
+		(pin "1"
+			(uuid "b19858ec-6027-4989-b632-ec87a42bc86f")
+		)
+		(instances
+			(project ""
+				(path "/add37744-b832-4f24-98d5-20347e778715"
+					(reference "Q1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 204.47 119.38 0)
 		(unit 1)
@@ -4271,7 +4271,7 @@
 				)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_0201_0603Metric"
+		(property "Footprint" "LED_SMD:LED_0402_1005Metric"
 			(at 139.7 124.46 0)
 			(effects
 				(font
@@ -4338,7 +4338,7 @@
 				)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_0201_0603Metric"
+		(property "Footprint" "LED_SMD:LED_0402_1005Metric"
 			(at 139.7 104.14 0)
 			(effects
 				(font
@@ -4471,7 +4471,7 @@
 				)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_0201_0603Metric"
+		(property "Footprint" "LED_SMD:LED_0402_1005Metric"
 			(at 139.7 134.62 0)
 			(effects
 				(font
@@ -4606,7 +4606,7 @@
 				)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_0201_0603Metric"
+		(property "Footprint" "LED_SMD:LED_0402_1005Metric"
 			(at 139.7 114.3 0)
 			(effects
 				(font
@@ -4676,7 +4676,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Library:SODFL3818X130N"
+		(property "Footprint" "Diode_SMD:D_SOD-123F"
 			(at 149.225 129.54 0)
 			(effects
 				(font
@@ -5356,7 +5356,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Library:SODFL3818X130N"
+		(property "Footprint" "Diode_SMD:D_SOD-123F"
 			(at 149.225 109.22 0)
 			(effects
 				(font
@@ -5510,7 +5510,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Library:SODFL3818X130N"
+		(property "Footprint" "Diode_SMD:D_SOD-123F"
 			(at 149.225 119.38 0)
 			(effects
 				(font

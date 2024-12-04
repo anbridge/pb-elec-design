@@ -64,8 +64,8 @@
       39,
       40
     ],
-    "visible_layers": "ff8ffff_ffffffff",
-    "zone_display_mode": 1
+    "visible_layers": "ffdffff_ffffffff",
+    "zone_display_mode": 0
   },
   "git": {
     "repo_password": "",
@@ -74,7 +74,7 @@
     "ssh_key": ""
   },
   "meta": {
-    "filename": "final_imu_module.kicad_prl",
+    "filename": "pb_mobo_final.kicad_prl",
     "version": 3
   },
   "project": {

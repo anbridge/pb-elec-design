@@ -1,4 +1,4 @@
-24164339545063318
+24172999425287961
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -97811,6 +97811,34 @@ CON_527450897_MOL
 10
 10
 external_footprints
+DLF-4_1P6X0P8
+
+DLF162500LT-5028A1 
+0
+4
+4
+external_footprints
+PW24_TEX
+
+TCA9548APWR 
+0
+24
+24
+external_footprints
+PW24_TEX-L
+
+TCA9548APWR 
+0
+24
+24
+external_footprints
+PW24_TEX-M
+
+TCA9548APWR 
+0
+24
+24
+external_footprints
 SW_SSSS811101
 
 
@@ -97818,9 +97846,16 @@ SW_SSSS811101
 7
 7
 external_footprints
-tooling_hole
+jlcpcb_tooling_hole
 
 
 0
 0
 0
+pcb_antenna
+meander_antenna_stm32wb10cc
+
+
+0
+1
+1

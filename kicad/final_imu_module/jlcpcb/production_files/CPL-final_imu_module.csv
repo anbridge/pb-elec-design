@@ -1,0 +1,8 @@
+Designator,Val,Package,Mid X,Mid Y,Rotation,Layer
+C2,0.1u,C_0402_1005Metric,110.0,-98.75,180.0,top
+C3,0.1u,C_0402_1005Metric,112.98,-98.5,180.0,top
+C5,0.1u,C_0402_1005Metric,113.02,-93.0,180.0,top
+J1,527450897,CON_527450897_MOL,105.375,-95.5,-90.0,top
+R1,4.7k,R_0603_1608Metric,109.5,-91.75,90.0,top
+R2,4.7k,R_0603_1608Metric,111.25,-91.75,90.0,top
+U1,ICM-20948,InvenSense_QFN-24_3x3mm_P0.4mm,111.5,-95.9,270.0,top
